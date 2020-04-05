@@ -16,7 +16,7 @@ const { Sequelize, Model, DataTypes } = require('sequelize');
 
 // RPi
 const sequelize = new Sequelize('weather', 'pi', 'mysqln3sov', {
-    host: '192.168.1.150',
+    host: 'localhost',
     port: 3306,
     dialect: 'mariadb',
     dialectOptions: {
