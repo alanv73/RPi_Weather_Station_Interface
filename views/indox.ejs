@@ -1,0 +1,171 @@
+<%- include("partials/header") %>
+    <header class="jumbotron">
+        <div class="container">
+            <h1><i class="fas fa-sun"></i> Currently in 17009...</h1>
+            <p>Current conditions in our part of the world!</p>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="row">
+            <div id='myDiv' class="col-sm-4">
+                <span id="speed" hidden>
+                    <%= data.WIND_SPEED %>
+                </span>
+                <span id="gust" hidden>
+                    <%= data.WIND_GUST_SPEED %>
+                </span>
+            </div>
+            <div class="card col-sm-3" style="width: 18rem;">
+                <h2 class="text-center">Wind Chill</h2>
+                <div id="wind-chill" class="card-img-top text-center">
+                    <canvas id="chill-canvas" data-type="linear-gauge" data-width="120" data-height="300" data-min-value="-30"
+                        data-start-angle="90" data-ticks-angle="180" data-value-box="false" data-max-value="120"
+                        data-major-ticks="-30,-15,0,15,30,45,60,75,90,105,120" data-minor-ticks="3"
+                        data-stroke-ticks="true" data-highlights='[ {"from": 90, "to": 120, "color": "rgba(200, 50, 50, .75)"}, {"from": 70, "to": 90, 
+                        "color": "rgba(255, 128, 0, .75)"}, {"from": 50, "to": 70, "color": "rgba(255, 255, 0, .75)"},{"from": 32, "to": 50, 
+                        "color": "rgba(0, 255, 0, .75)"}, {"from": 0, "to": 32, "color": "rgba(0, 255, 255, .75)"}, {"from": -30, "to": 0, 
+                        "color": "rgba(0, 0, 255, .75)"} ]' data-color-plate="#fff" data-border-shadow-width="0"
+                        data-borders="false" data-needle-type="arrow" data-needle-width="3" data-needle-circle-size="7"
+                        data-needle-circle-outer="true" data-needle-circle-inner="false" data-animation-duration="1500"
+                        data-animation-rule="linear" data-bar-width="10" data-color-bar-progress="#0080FF" data-value="<%= data.WIND_CHILL %>"></canvas>
+                </div>
+                <div class="card-body">
+                    <h3 class="card-text text-center"><%= data.WIND_CHILL %>&#8457;</h3>
+                </div>
+            </div>
+            <div class="card col-sm-3" style="width: 18rem;">
+                <h2 class="text-center">Heat Index</h2>
+                <div id="heat-idx" class="card-img-top text-center">
+                    <canvas id="heat-canvas" data-type="linear-gauge" data-width="120" data-height="300" data-min-value="-30"
+                        data-start-angle="90" data-ticks-angle="180" data-value-box="false" data-max-value="120"
+                        data-major-ticks="-30,-15,0,15,30,45,60,75,90,105,120" data-minor-ticks="3" data-stroke-ticks="true"
+                        data-highlights='[ {"from": 90, "to": 120, "color": "rgba(200, 50, 50, .75)"}, {"from": 70, "to": 90, 
+                        "color": "rgba(255, 128, 0, .75)"}, {"from": 50, "to": 70, "color": "rgba(255, 255, 0, .75)"},{"from": 32, "to": 50, 
+                        "color": "rgba(0, 255, 0, .75)"}, {"from": 0, "to": 32, "color": "rgba(0, 255, 255, .75)"}, {"from": -30, "to": 0, 
+                        "color": "rgba(0, 0, 255, .75)"} ]' data-color-plate="#fff"
+                        data-border-shadow-width="0" data-borders="false" data-needle-type="arrow" data-needle-width="3"
+                        data-needle-circle-size="7" data-needle-circle-outer="true" data-needle-circle-inner="false"
+                        data-animation-duration="1500" data-animation-rule="linear" data-bar-width="10" data-color-bar-progress="red" data-value="<%= data.HEAT_IDX %>"></canvas>
+                </div>
+                <div class="card-body">
+                    <h3 class="card-text text-center"><%= data.HEAT_IDX %>&#8457;</h3>
+                </div>
+            </div>
+            <div class="card col-sm-3" style="width: 18rem;">
+                <h2 class="text-center">Ambient</h2>
+                <div id="ambient-temp" class="card-img-top text-center"></div>
+                <div class="card-body">
+                    <h3 class="card-text text-center"><%= data.AMBIENT_TEMPERATURE %>&#8457;</h3>
+                </div>
+            </div>
+            <div class="card col-sm-3" style="width: 18rem;">
+                <h2 class="text-center">Ground</h2>
+                <div id="ground-temp" class="card-img-top text-center"></div>
+                <div class="card-body">
+                    <h3 class="card-text text-center"><%= data.GROUND_TEMPERATURE %>&#8457;</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <script src="scripts/thermometer.min.js"></script>
+    <script>
+        function drawThermo(container, temp) {
+            var thermometer = new Thermometer();
+            var min = temp - (temp * 0.2);
+            var max = +temp + (temp * 0.2);
+            thermometer.render(container, temp, min, max);
+        }
+
+        var gauge = new LinearGauge({
+                renderTo: 'chill-canvas',
+                width: 120,
+                height: 400,
+                units: "°F",
+                minValue: -30,
+                startAngle: 90,
+                ticksAngle: 180,
+                valueBox: true,
+                maxValue: 120,
+                majorTicks: [
+                    "-30",
+                    "-20",
+                    "-10",
+                    "0",
+                    "10",
+                    "20",
+                    "30",
+                    "40",
+                    "50",
+                    "60",
+                    "70",
+                    "80",
+                    "90",
+                    "100",
+                    "110",
+                    "120"
+                ],
+                minorTicks: 2,
+                strokeTicks: true,
+                highlights: [
+                    {
+                        "from": 90,
+                        "to": 120,
+                        "color": "rgba(200, 50, 50, .75)"
+                    },
+                    {
+                        "from": 70,
+                        "to": 90,
+                        "color": "rgba(255, 128, 0, .75)"
+                    },
+                    {
+                        "from": 50,
+                        "to": 70,
+                        "color": "rgba(255, 255, 0, .75)"
+                    },
+                    {
+                        "from": 32,
+                        "to": 50,
+                        "color": "rgba(0, 255, 0, .75)"
+                    },
+                    {
+                        "from": 0,
+                        "to": 32,
+                        "color": "rgba(0, 255, 255, .75)"
+                    },
+                    {
+                        "from": -30,
+                        "to": 0,
+                        "color": "rgba(0, 0, 255, .75)"
+                    }
+                ],
+                colorPlate: "#fff",
+                borderShadowWidth: 0,
+                borders: false,
+                needleType: "arrow",
+                needleWidth: 2,
+                needleCircleSize: 7,
+                needleCircleOuter: true,
+                needleCircleInner: false,
+                animationDuration: 1500,
+                animationRule: "linear",
+                barWidth: 10,
+                value: "<%= data.WIND_CHILL %>"
+            }).draw();
+
+        let thermos = [{
+                    container: 'ambient-temp',
+                    temp: "<%= data.AMBIENT_TEMPERATURE %>"
+                }, {
+                    container: 'ground-temp',
+                    temp: "<%= data.GROUND_TEMPERATURE %>"
+                }];
+
+        thermos.forEach(thermo => {
+            var container = document.getElementById(thermo.container);
+            var temp = thermo.temp;
+            drawThermo(container, temp);
+        });
+    </script>
+<%- include("partials/footer") %>

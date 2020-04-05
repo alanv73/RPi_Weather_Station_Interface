@@ -1,0 +1,133 @@
+<%- include("partials/header") %>
+    <header class="jumbotron">
+        <div class="container">
+            <h1><i class="fas fa-sun"></i> Currently in 17009...</h1>
+            <p>Current conditions in our part of the world!</p>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="row mx-auto">
+            <div class="card col-sm-2">
+                <% let bulbColor, tempData;
+                if((data.AMBIENT_TEMPERATURE > 50) && (data.WIND_SPEED > 3)) { %>
+                    <h2 class="text-center">Heat Index</h2>
+                    <% bulbColor = '#ff7903';
+                    tempData = data.HEAT_IDX;
+                } else {  %>
+                    <h2 class="text-center">Wind Chill</h2>
+                    <% bulbColor = '#0080FF';
+                    tempData = data.WIND_CHILL
+                } %>
+                <div id="wind-chill" class="card-img-top text-center">
+                    <canvas id="chill-canvas" data-type="linear-gauge" data-width="90" data-height="200" data-min-value="-30"
+                        data-start-angle="90" data-ticks-angle="180" data-value-box="false" data-max-value="120"
+                        data-major-ticks="-30,-15,0,15,30,45,60,75,90,105,120" data-minor-ticks="3"
+                        data-stroke-ticks="true" data-highlights='[ {"from": 90, "to": 120, "color": "rgba(200, 50, 50, .75)"}, {"from": 70, "to": 90, 
+                        "color": "rgba(255, 128, 0, .75)"}, {"from": 50, "to": 70, "color": "rgba(255, 255, 0, .75)"},{"from": 32, "to": 50, 
+                        "color": "rgba(0, 255, 0, .75)"}, {"from": 0, "to": 32, "color": "rgba(0, 255, 255, .75)"}, {"from": -30, "to": 0, 
+                        "color": "rgba(0, 0, 255, .75)"} ]' data-color-plate="#fff" data-border-shadow-width="0"
+                        data-borders="false" data-needle-type="arrow" data-needle-width="3" data-needle-circle-size="7"
+                        data-needle-circle-outer="true" data-needle-circle-inner="false" data-animation-duration="1500"
+                        data-animation-rule="linear" data-bar-width="10" data-color-bar-progress="<%= bulbColor %>" data-value="<%= tempData %>"></canvas>
+                </div>
+                <div class="card-body">
+                    <h3 class="card-text text-center"><%= tempData %>&#8457;</h3>
+                </div>
+            </div>
+            <div class="card col-sm-2">
+                <h2 class="text-center">Dew Point</h2>
+                <div id="heat-idx" class="card-img-top text-center">
+                    <canvas id="heat-canvas" data-type="linear-gauge" data-width="90" data-height="200" data-min-value="-30"
+                        data-start-angle="90" data-ticks-angle="180" data-value-box="false" data-max-value="120"
+                        data-major-ticks="-30,-15,0,15,30,45,60,75,90,105,120" data-minor-ticks="3" data-stroke-ticks="true"
+                        data-highlights='[ {"from": 90, "to": 120, "color": "rgba(200, 50, 50, .75)"}, {"from": 70, "to": 90, 
+                        "color": "rgba(255, 128, 0, .75)"}, {"from": 50, "to": 70, "color": "rgba(255, 255, 0, .75)"},{"from": 32, "to": 50, 
+                        "color": "rgba(0, 255, 0, .75)"}, {"from": 0, "to": 32, "color": "rgba(0, 255, 255, .75)"}, {"from": -30, "to": 0, 
+                        "color": "rgba(0, 0, 255, .75)"} ]' data-color-plate="#fff" data-border-shadow-width="0"
+                        data-borders="false" data-needle-type="arrow" data-needle-width="3" data-needle-circle-size="7"
+                        data-needle-circle-outer="true" data-needle-circle-inner="false" data-animation-duration="1500"
+                        data-animation-rule="linear" data-bar-width="10" data-color-bar-progress="#02b8b5" data-value="<%= data.DEW_PT %>"></canvas>
+                </div>
+                <div class="card-body">
+                    <h3 class="card-text text-center"><%= data.DEW_PT %>&#8457;</h3>
+                </div>
+            </div>
+            <div class="card col-sm-2">
+                <h2 class="text-center">Ambient</h2>
+                <div id="ambient-temp" class="card-img-top text-center">
+                    <canvas id="heat-canvas" data-type="linear-gauge" data-width="120" data-height="300" data-min-value="-30"
+                        data-start-angle="90" data-ticks-angle="180" data-value-box="false" data-max-value="120"
+                        data-major-ticks="-30,-15,0,15,30,45,60,75,90,105,120" data-minor-ticks="3" data-stroke-ticks="true"
+                        data-highlights='[ {"from": 90, "to": 120, "color": "rgba(200, 50, 50, .75)"}, {"from": 70, "to": 90, 
+                        "color": "rgba(255, 128, 0, .75)"}, {"from": 50, "to": 70, "color": "rgba(255, 255, 0, .75)"},{"from": 32, "to": 50, 
+                        "color": "rgba(0, 255, 0, .75)"}, {"from": 0, "to": 32, "color": "rgba(0, 255, 255, .75)"}, {"from": -30, "to": 0, 
+                        "color": "rgba(0, 0, 255, .75)"} ]' data-color-plate="#fff" data-border-shadow-width="0"
+                        data-borders="false" data-needle-type="arrow" data-needle-width="3" data-needle-circle-size="7"
+                        data-needle-circle-outer="true" data-needle-circle-inner="false" data-animation-duration="1500"
+                        data-animation-rule="linear" data-bar-width="10" data-color-bar-progress="red"
+                        data-value="<%= data.AMBIENT_TEMPERATURE %>"></canvas>
+                </div>
+                <div class="card-body">
+                    <h3 class="card-text text-center"><%= data.AMBIENT_TEMPERATURE %>&#8457;</h3>
+                </div>
+            </div>
+            <div class="card col-sm-2">
+                <h2 class="text-center">Ground</h2>
+                <div id="ground-temp" class="card-img-top text-center">
+                    <canvas id="heat-canvas" data-type="linear-gauge" data-width="120" data-height="300" data-min-value="-30"
+                        data-start-angle="90" data-ticks-angle="180" data-value-box="false" data-max-value="120"
+                        data-major-ticks="-30,-15,0,15,30,45,60,75,90,105,120" data-minor-ticks="3" data-stroke-ticks="true"
+                        data-highlights='[ {"from": 90, "to": 120, "color": "rgba(200, 50, 50, .75)"}, {"from": 70, "to": 90, 
+                        "color": "rgba(255, 128, 0, .75)"}, {"from": 50, "to": 70, "color": "rgba(255, 255, 0, .75)"},{"from": 32, "to": 50, 
+                        "color": "rgba(0, 255, 0, .75)"}, {"from": 0, "to": 32, "color": "rgba(0, 255, 255, .75)"}, {"from": -30, "to": 0, 
+                        "color": "rgba(0, 0, 255, .75)"} ]' data-color-plate="#fff" data-border-shadow-width="0"
+                        data-borders="false" data-needle-type="arrow" data-needle-width="3" data-needle-circle-size="7"
+                        data-needle-circle-outer="true" data-needle-circle-inner="false" data-animation-duration="1500"
+                        data-animation-rule="linear" data-bar-width="10" data-color-bar-progress="#10a300"
+                        data-value="<%= data.GROUND_TEMPERATURE %>"></canvas>
+                </div>
+                <div class="card-body">
+                    <h3 class="card-text text-center"><%= data.GROUND_TEMPERATURE %>&#8457;</h3>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div id='myDiv' class="col-sm-4">
+                <span id="speed" hidden>
+                    <%= data.WIND_SPEED %>
+                </span>
+                <span id="gust" hidden>
+                    <%= data.WIND_GUST_SPEED %>
+                </span>
+            </div>
+            <div class="card col-sm-4 text-center">
+                <h2 class="text-center">Wind Direction</h2>
+                <div id="wind-dir" class="card-img-top text-center">
+                    <canvas data-type="radial-gauge" data-min-value="0" data-max-value="360" data-major-ticks="N,NE,E,SE,S,SW,W,NW,N"
+                        data-minor-ticks="22" data-ticks-angle="360" data-start-angle="180" data-stroke-ticks="false"
+                        data-highlights="false" data-color-plate="#33aa8e" data-color-major-ticks="#f5f5f5" data-color-minor-ticks="#ddd"
+                        data-color-numbers="#ccc" data-color-needle="rgba(240, 128, 128, 1)" data-color-needle-end="red"
+                        data-value-box="false" data-value-text-shadow="false" data-color-circle-inner="#fff" data-value="<%= data.WIND_DIRECTION %>>"
+                        data-color-needle-circle-outer="#ccc" data-needle-circle-size="15" data-needle-circle-outer="false"
+                        data-animation-rule="linear" data-needle-type="line" data-needle-start="75" data-needle-end="107"
+                        data-needle-width="3" data-borders="true" data-border-inner-width="0" data-border-middle-width="0"
+                        data-border-outer-width="10" data-color-border-outer="#ccc" data-color-border-outer-end="#ccc" data-width="250" data-height="250"
+                        data-color-needle-shadow-down="#222" data-border-shadow-width="0" data-animation-duration="1500"></canvas>                </div>
+                <div class="card-body">
+                    <h3 class="card-text text-center"><%= Number(data.WIND_DIRECTION).toFixed(0); %>&#176; <span id="compass"></span></h3>
+                </div>
+            </div>
+        </div>
+    </div>
+<script>
+    function deg2Compass(deg) {
+        const arr = ["N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW", "N", "NNE"];
+
+        let dir = arr[Math.floor(deg / 22.5)];
+        return dir;
+    }
+
+    document.getElementById('compass').innerText = deg2Compass(Number("<%= data.WIND_DIRECTION %>"))
+</script>
+<%- include("partials/footer") %>
