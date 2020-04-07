@@ -8,6 +8,7 @@
 
     <div class="container">
         <div class="row mx-auto">
+            <div class="col-sm-2"></div>
             <div class="card col-sm-2">
                 <% let bulbColor, tempData;
                 if((data.AMBIENT_TEMPERATURE > 50) && (data.WIND_SPEED > 3)) { %>
@@ -92,14 +93,34 @@
                 </div>
             </div>
         </div>
-        <div class="row">
-            <div id='myDiv' class="col-sm-4">
-                <span id="speed" hidden>
-                    <%= data.WIND_SPEED %>
-                </span>
-                <span id="gust" hidden>
-                    <%= data.WIND_GUST_SPEED %>
-                </span>
+        <div class="row mx-auto">
+            <div class="card col-sm-4 text-center">
+                <h2 class="text-center">RainFall</h2>
+                <div id="rainfall" class="card-img-top text-center">
+                </div>
+                <div class="card-body">
+                    <h3 class="card-text text-center"><%= Number(data.RAINFALL).toFixed(2); %> in</h3>
+                </div>
+            </div>
+            <div class="card col-md-4">
+                <h2 class="text-center">Wind Speed</h2>
+                <div id="wind-spd" class="text-center">
+                    <canvas id="wind-canvas" data-type="radial-gauge" data-width="250" data-height="250" data-min-value="0"
+                        data-units="mph"
+                        data-value-box="false" data-max-value="120"
+                        data-major-ticks="0,10,20,30,40,50,60,70,80,90,100,110,120" data-minor-ticks="5" data-stroke-ticks="true"
+                        data-highlights='[
+                            {"from": 30, "to": 50, "color": "rgba(200, 200, 50, .55)"},
+                            {"from": 50, "to": 70, "color": "rgba(200, 130, 50, .55)"},
+                            {"from": 70, "to": 120, "color": "rgba(200, 50, 50, .55)"},
+                            {"from": <%= (parseFloat(data.WIND_GUST_SPEED) - 1) %>, "to": <%= (parseFloat(data.WIND_GUST_SPEED) + 1) %>, "color": "rgba(255, 0, 0, 1)"}
+                        ]' data-color-plate="#fff" data-border-shadow-width="0" data-borders="false" data-needle-type="arrow" data-color-needle="rgba(255,0,0,1)"
+                        data-needle-width="2" data-needle-circle-size="7" data-needle-circle-outer="true" data-needle-circle-inner="false"
+                        data-animation-duration="1500" data-animation-rule="linear" data-value="<%= data.WIND_SPEED %>"></canvas>
+                </div>
+                <div id="wspd-val" class="card-body">
+                    <h3 class="card-text text-center"><%= parseFloat(data.WIND_SPEED).toFixed(1) %> mph/<%= parseFloat(data.WIND_GUST_SPEED).toFixed(1) %> mph gust</h3>
+                </div>
             </div>
             <div class="card col-sm-4 text-center">
                 <h2 class="text-center">Wind Direction</h2>
@@ -113,9 +134,10 @@
                         data-animation-rule="linear" data-needle-type="line" data-needle-start="75" data-needle-end="107"
                         data-needle-width="3" data-borders="true" data-border-inner-width="0" data-border-middle-width="0"
                         data-border-outer-width="10" data-color-border-outer="#ccc" data-color-border-outer-end="#ccc" data-width="250" data-height="250"
-                        data-color-needle-shadow-down="#222" data-border-shadow-width="0" data-animation-duration="1500"></canvas>                </div>
+                        data-color-needle-shadow-down="#222" data-border-shadow-width="0" data-animation-duration="1500"></canvas>
+                </div>
                 <div class="card-body">
-                    <h3 class="card-text text-center"><%= Number(data.WIND_DIRECTION).toFixed(0); %>&#176; <span id="compass"></span></h3>
+                    <h3 class="card-text text-center"><%= Number(data.WIND_DIRECTION).toFixed(0); %>&#176;</h3>
                 </div>
             </div>
         </div>
