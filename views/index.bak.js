@@ -57,48 +57,43 @@ function closeDB() {
 // INDEX Route - show current conditions
 app.get('/', (req, res) => {
     let currentData;
-    let rainToday;
 
     // get last database entry + total rain for today (so far)
-    sequelize.query(
-        `select *, (select sum(RAINFALL) from WEATHER_MEASUREMENT
-                        where date(CREATED) = date(wm.CREATED)) totalRain
-        from WEATHER_MEASUREMENT wm
-        order by wm.CREATED desc
-        limit 1`,
-        {
-            type: sequelize.QueryTypes.SELECT,
-            model: WxMeasurement,
-            mapToModel: true,
-            raw: true
-        }
-    ).then((data) => {
+    WxMeasurement.findOne({
+        attributes: [
+            'AMBIENT_TEMPERATURE', 'GROUND_TEMPERATURE', 'AIR_PRESSURE',
+            'HUMIDITY', 'WIND_DIRECTION', 'WIND_SPEED',
+            'WIND_GUST_SPEED', 'WIND_CHILL', 'HEAT_IDX', 'DEW_PT',
+            'RAINFALL',
+            [
+                sequelize.literal(`(
+                    select sum(RAINFALL) 
+                    from WEATHER_MEASUREMENT 
+                    where date(CREATED) = date(now()))`),
+                'totalRain'
+            ],
+            'CREATED'
+        ],
+        order: [['CREATED', 'DESC']],
+        raw: true
+    }).then((data) => {
         // console.log(data);
-        currentData = data[0];
-        const currentDate = new Date(data[0].CREATED);
-        const condxYear = currentDate.getFullYear();
-        const condxMonth = currentDate.getMonth() + 1;
-        const condxDay = currentDate.getDate();
-        const condxDate = `${condxYear}${String(condxMonth).padStart(2, '0')}${String(condxDay).padStart(2, '0')}`;
-
-        // console.log(data[0]);
+        currentData = data.geta();
 
         // get total rain each hour for today
-        sequelize.query(
-            `select hour(CREATED) hour_recorded,
-                sum(RAINFALL) rainTotal
-            from WEATHER_MEASUREMENT
-            where date(CREATED) = date('${condxDate}')
-            group by hour(CREATED)
-            order by ID`,
-            {
-                type: sequelize.QueryTypes.SELECT,
-                model: WxMeasurement,
-                mapToModel: true,
-                raw: true
-            }
-        ).then(data => {
-            // console.log(data);
+        WxMeasurement.findAll({
+            attributes: [
+                [sequelize.fn('DATE', currentDate), 'target_day'],
+                [sequelize.fn('DATE', sequelize.col('CREATED')), 'created_day'],
+                [sequelize.fn('HOUR', sequelize.col('CREATED')), 'hour_recorded'],
+                [sequelize.fn('SUM', sequelize.col('RAINFALL')), 'rainTotal']
+            ],
+            where: sequelize.where(sequelize.fn('DATE', sequelize.col('CREATED')), sequelize.fn('DATE', currentDate)),
+            order: [['ID', 'ASC']],
+            group: sequelize.fn('HOUR', sequelize.col('CREATED')),
+            raw: true
+        }).then(data => {
+            console.log(data);
             let hourlyRain = data;
 
             res.render('index', {

@@ -96,10 +96,11 @@
         <div class="row mx-auto">
             <div class="card col-sm-4 text-center">
                 <h2 class="text-center">RainFall</h2>
-                <div id="rainfall" class="card-img-top text-center">
+                <div id="rainfall" class="card-img-top text-center">                    
+                    <canvas id="rain"></canvas>
                 </div>
                 <div class="card-body">
-                    <h3 class="card-text text-center"><%= Number(data.RAINFALL).toFixed(2); %> in</h3>
+                    <h3 class="card-text text-center"><%= parseFloat(data.totalRain || 0).toFixed(2); %> in. Today</h3>
                 </div>
             </div>
             <div class="card col-md-4">
@@ -137,7 +138,7 @@
                         data-color-needle-shadow-down="#222" data-border-shadow-width="0" data-animation-duration="1500"></canvas>
                 </div>
                 <div class="card-body">
-                    <h3 class="card-text text-center"><%= Number(data.WIND_DIRECTION).toFixed(0); %>&#176;</h3>
+                    <h3 class="card-text text-center"><%= Number(data.WIND_DIRECTION).toFixed(0); %>&#176; <span id="compass"></span></h3>
                 </div>
             </div>
         </div>
@@ -150,6 +151,67 @@
         return dir;
     }
 
+    function chartRain(x_data, y_data) {
+
+        const ctx = document.getElementById('rain').getContext('2d');
+        const myChart = new Chart(ctx, {
+            type: ys.length > 2 ? 'line' : 'bar',
+            data: {
+                labels: x_data,
+                datasets: [{
+                    label: 'Rain in Inches',
+                    data: y_data,
+                    fill: false,
+                    pointRadius: 1,
+                    backgroundColor: 'rgba(0, 0, 255, 0.2)',
+                    borderColor: 'rgba(0, 0, 255, 1)',
+                    borderWidth: 1,
+                    // lineTension: 0 // straight lines or curved
+                }]
+            },
+            options: {
+                aspectRatio: 1,
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            // Include an inch symbol in the ticks
+                            callback: function (value, index, values) {
+                                return value + '"';
+                            },
+                            max: (Math.max.apply(Math, ys) * 1.25).toFixed(2),
+                            min: 0
+                        },
+                        display: 'auto',
+                        scaleLabel: {
+                        display: true,
+                        labelString: 'inches'
+                        }
+
+                    }],
+                    xAxes: [{
+                        display: 'auto',
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'hour'
+                        }
+                    }]
+                },
+                legend: {
+                    display: false
+                }
+            }
+        });
+    }
+    
+    const xs = [];
+    const ys = [];
+
+    "<% rainData.forEach(day => { %>"
+        xs.push("<%= day.hour_recorded %>");
+        ys.push("<%= day.rainTotal %>");
+    "<% }); %>"
+
+    chartRain(xs, ys);
     document.getElementById('compass').innerText = deg2Compass(Number("<%= data.WIND_DIRECTION %>"))
 </script>
 <%- include("partials/footer") %>
