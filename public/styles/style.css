@@ -2,6 +2,14 @@ body {
     font-family: 'Manrope', sans-serif;
 }
 
+.jumbotron {
+    margin-top: 10%;
+}
+
+#dashboard {
+    padding-top: 6%;
+}
+
 .card-body h3 {
     margin-top: 0;
 }

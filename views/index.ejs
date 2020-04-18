@@ -1,15 +1,18 @@
 <%- include("partials/header") %>
-    <header class="jumbotron">
-        <div class="container text-center">
-            <h1 class="display-4"><i class="fas fa-viruses"></i> Currently in 17009...</h1>
-            <p>Current conditions in our part of the world!</p>
-            <a class="btn btn-primary btn-lg" href="#row-0" role="button">Current Weather Conditions</a>
-        </div>
-    </header>
+    <div class="container">
+        <header class="jumbotron rounded-lg">
+            <div class="container text-center">
+                <h1 class="display-4"><i class="fas fa-viruses"></i> Currently in 17009...</h1>
+                <p>Current conditions in our part of the world!</p>
+                <a class="btn btn-primary btn-lg" href="#dashboard" role="button">Current Weather Conditions</a>
+            </div>
+        </header>
+    </div>
 
-    <div id="row-0" class="row mx-4 py-4">
-        <div class="col-md-3">
-            <div class="card-column py-2 float-left shadow">
+    <div id="dashboard" class="row mx-4 pb-4 justify-content-center">
+        <div class="col-lg-3">
+            <div class="card-column float-lg-left">
+                <div class="shadow py-2 px-2 mx-lg-0 mx-sm-5 mb-5">
                 <div class="card border-0">
                     <div id="wind-spd" class="text-center">
                         <canvas id="wind-canvas" data-font-numbers="Manrope" data-font-number-size="12" data-font-numbers-style="100"
@@ -69,12 +72,13 @@
                             data-font-units="Manrope" data-value="<%= data.AIR_PRESSURE %>"></canvas>
                     </div>
                 </div>
+                </div>
             </div>
         </div>
         <div class="col-md-9 mt-0">
             <div id="row-1" class="row">
                 <div class="card-group col-md-12 justify-content-center">
-                    <div class="card border-0 w-50">
+                    <div class="card border-0 w-50 mx-auto">
                         <% let bulbColor, tempData;
                         if((parseFloat(data.AMBIENT_TEMPERATURE) < 50) && (parseFloat(data.WIND_SPEED) > 3)) { %>
                             <h4 class="text-center">Wind Chill</h4>
@@ -108,7 +112,7 @@
                             <h4 class="card-text text-center"><%= parseFloat(tempData).toFixed(1); %>&#8457;</h2>
                         </div>
                     </div>
-                    <div class="card border-0 w-50">
+                    <div class="card border-0 w-50 mx-auto">
                         <h4 class="text-center">Dew Point</h5>
                         <div id="heat-idx" class="card-img-top text-center">
                             <canvas id="heat-canvas" data-type="linear-gauge" data-width="150" data-height="240" data-min-value="-30"
@@ -133,7 +137,7 @@
                             <h4 class="card-text text-center"><%= parseFloat(data.DEW_PT).toFixed(1); %>&#8457;</h2>
                         </div>
                     </div>
-                    <div class="card border-0 w-50">
+                    <div class="card border-0 w-50 mx-auto">
                         <h4 class="text-center">Ground Temp</h4>
                         <div id="ground-temp" class="card-img-top text-center">
                             <canvas id="heat-canvas" data-type="linear-gauge" data-width="150" data-height="240" data-min-value="-30"
@@ -224,7 +228,7 @@
                         <h4 class="text-center my-0">RainFall</h4>
                     </div>
                     <div id="rainfall" class="card-img-top text-center mt-3">
-                        <canvas id="rain" height="325px"></canvas>
+                        <canvas id="rain" height="295px"></canvas>
                     </div>
                     <div class="card-body py-0"></div>
                     <div class="card-footer bg-transparent border-0 pt-0">
