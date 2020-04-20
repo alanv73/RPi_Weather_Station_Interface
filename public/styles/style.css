@@ -2,12 +2,9 @@ body {
     font-family: 'Manrope', sans-serif;
 }
 
-.jumbotron {
-    margin-top: 10%;
-}
-
 #dashboard {
     padding-top: 6%;
+    margin-top: 6%;
 }
 
 .card-body h3 {
@@ -16,4 +13,23 @@ body {
 
 #row-0 {
     margin-bottom: 100px;
+}
+
+.jumbotron {
+    margin-top: 10%;
+}
+
+@media only screen and (max-width: 750px) {
+.jumbotron {
+    margin-top: 13%;
+}
+
+@media only screen and (max-width: 500px) {
+.jumbotron {
+    margin-top: 20%;
+}
+
+@media only screen and (max-width: 300px) {
+.jumbotron {
+    margin-top: 25%;
 }
