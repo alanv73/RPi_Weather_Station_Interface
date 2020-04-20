@@ -79,9 +79,13 @@ app.get('/', (req, res) => {
         const condxYear = currentDate.getFullYear();
         const condxMonth = currentDate.getMonth() + 1;
         const condxDay = currentDate.getDate();
-        const condxDate = `${condxYear}${String(condxMonth).padStart(2, '0')}${String(condxDay).padStart(2, '0')}`;
+        const condxHour = currentDate.getHours();
+        const condxMin = currentDate.getMinutes();
+        const condxSec = currentDate.getSeconds();
+        const condxDate = `${condxYear}/${String(condxMonth).padStart(2, '0')}/${String(condxDay).padStart(2, '0')} ${String(condxHour).padStart(2, '0')}:${String(condxMin).padStart(2, '0')}:${String(condxSec).padStart(2, '0')}`;
 
         // console.log(data[0]);
+        // console.log(condxDate);
 
         // get total rain each hour for today
         sequelize.query(
@@ -90,7 +94,8 @@ app.get('/', (req, res) => {
             from WEATHER_MEASUREMENT
             where date(CREATED) = date('${condxDate}')
             group by hour(CREATED)
-            order by ID`,
+            order by ID desc
+            limit 5`,
             {
                 type: sequelize.QueryTypes.SELECT,
                 model: WxMeasurement,
@@ -111,48 +116,6 @@ app.get('/', (req, res) => {
     }).catch(err => {
         console.error('Error :\n', err.message);
     });
-
-
-
-    // get total rain for today
-    // WxMeasurement.findOne({
-    //     attributes: [
-    //         [sequelize.fn('SUM', sequelize.col('RAINFALL')), 'rainTotal']
-    //     ],
-    //     where: sequelize.where(sequelize.fn('DATE', sequelize.col('CREATED')), sequelize.fn('DATE', '20200412')) //sequelize.fn('NOW'))),
-    // }).then((data) => {
-    //     // console.log(data.dataValues.rainTotal);
-    //     // res.render('index', { data: data });
-    //     rainToday = data;
-    //     // closeDB();
-    // }).catch(err => {
-    //     console.error('Error :\n', err.message);
-    // });
-
-    // sequelize.query(`select AMBIENT_TEMPERATURE,GROUND_TEMPERATURE,
-    //                     AIR_PRESSURE,HUMIDITY,WIND_DIRECTION,WIND_SPEED,
-    //                     WIND_GUST_SPEED,WIND_CHILL,HEAT_IDX,DEW_PT,RAINFALL,
-    //                     (select sum(RAINFALL) runningTotal
-    //                         from WEATHER_MEASUREMENT
-    //                         where date(CREATED) = date(wm.CREATED)
-    //                         group by date(CREATED)) rainTotal,
-    //                     CPU_TEMP,
-    //                     CREATED
-    //                     from WEATHER_MEASUREMENT wm
-    //                     order by created desc limit 1;`,
-    //     {
-    //         type: sequelize.QueryTypes.SELECT,
-    //         instance: WxMeasurement,
-    //         model: WxMeasurement,
-    //         mapToModel: true,
-    //         plain: true
-    //     }).then(data => {
-    //         console.log(data.dataValues);
-    //         console.log(data.AMBIENT_TEMPERATURE);
-    //         currentData = data;
-    //     }).catch(err => {
-    //         console.error('Error :\n', err.message);
-    //     });
 
 });
 

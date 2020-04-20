@@ -2,7 +2,17 @@
     <div class="container">
         <header class="jumbotron rounded-lg">
             <div class="container text-center">
-                <h1 class="display-4"><i class="fas fa-viruses"></i> Currently in 17009...</h1>
+                <h1 class="display-4">
+                    <% let atmPress = parseFloat(data.AIR_PRESSURE);
+                    if (atmPress < 982) { %>
+                        <i class="fas fa-cloud"></i>
+                    <% } else if (atmPress < 1015) { %>
+                        <i class="fas fa-cloud-sun"></i>
+                    <% } else { %>
+                        <i class="fas fa-sun"></i>
+                    <% } %>
+                     Currently in 17009...
+                </h1>
                 <p>Current conditions in our part of the world!</p>
                 <a class="btn btn-primary btn-lg" href="#dashboard" role="button">Current Weather Conditions</a>
             </div>
@@ -223,7 +233,7 @@
                     </div>
                 </div>
                 <% if(data.totalRain) { %>
-                <div class="card border-0 col-lg-4 col-md-12 text-center mt-4">
+                <div class="card border-0 col-lg-4 col-md-12 text-center mt-4 mx-4 mx-sm-0">
                     <div class="card-header bg-transparent py-0">
                         <h4 class="text-center my-0">RainFall</h4>
                     </div>
@@ -253,10 +263,13 @@
     const ys = [];
 
     // transfer ejs arrays to JavaScript arrays
-    "<% rainData.forEach(day => { %>"
-        xs.push("<%= day.hour_recorded %>");
-        ys.push("<%= day.rainTotal %>");
+    "<% rainData.forEach(hour => { %>"
+        xs.push("<%= hour.hour_recorded %>");
+        ys.push("<%= hour.rainTotal %>");
     "<% }); %>"
+
+    xs.reverse();
+    ys.reverse();
 
     // make the rain chart
     chartRain(xs, ys);
