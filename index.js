@@ -4,6 +4,7 @@ const express = require('express'),
     router = express.Router(),
     sequelize = require('./models/sqlize'),
     WxMeasurement = require('./models/wxmeasr');
+const port = process.env.PORT;
 
 app.set('view engine', 'ejs');
 app.use(express.static(__dirname + '/public'));
@@ -122,8 +123,7 @@ app.get('/', (req, res) => {
 /*
  * Listen for connections on port 3000
  */
-
-app.listen(3000, () => {
-    console.log('WxPi listening on port 3000...');
+app.listen(port || 3000, () => {
+    console.log(`WxPi listening on port ${port || 3000}...`);
 });
 
