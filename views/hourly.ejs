@@ -1,0 +1,38 @@
+<%- include("partials/header") %>
+    <div class="container pt-4 mt-5">
+        <h1>Hourly Data</h1>
+        <canvas id="temp" style="display: block; height: 450px; width: 835px;"></canvas>
+    </div>
+    <script src="scripts/hourly_scripts.js"></script>
+    <script>
+        let AMBIENT_TEMPERATURE = [],
+                GROUND_TEMPERATURE = [],
+                AIR_PRESSURE = [],
+                HUMIDITY = [],
+                WIND_DIRECTION = [],
+                WIND_SPEED = [],
+                WIND_GUST_SPEED = [],
+                WIND_CHILL = [],
+                HEAT_IDX = [],
+                DEW_PT = [],
+                RAINFALL = [],
+                CREATED = [];
+
+        "<% rowData.forEach(row => { %>"
+            AMBIENT_TEMPERATURE.push(parseFloat("<%= row.AMBIENT_TEMPERATURE %>"));
+            GROUND_TEMPERATURE.push(parseFloat("<%= row.GROUND_TEMPERATURE %>"));
+            AIR_PRESSURE.push(parseFloat("<%= row.AIR_PRESSURE %>"));
+            HUMIDITY.push(parseFloat("<%= row.HUMIDITY %>"));
+            WIND_DIRECTION.push(parseFloat("<%= row.WIND_DIRECTION %>"));
+            WIND_SPEED.push(parseFloat("<%= row.WIND_SPEED %>"));
+            WIND_GUST_SPEED.push(parseFloat("<%= row.WIND_GUST_SPEED %>"));
+            WIND_CHILL.push(parseFloat("<%= row.WIND_CHILL %>"));
+            HEAT_IDX.push(parseFloat("<%= row.HEAT_IDX %>"));
+            DEW_PT.push(parseFloat("<%= row.DEW_PT %>"));
+            RAINFALL.push(parseFloat("<%= row.RAINFALL %>"));
+            CREATED.push((new Date("<%= row.CREATED %>")).toLocaleTimeString("en-US"));
+        "<% }); %>"
+
+        chartTemp(CREATED, AMBIENT_TEMPERATURE, GROUND_TEMPERATURE, DEW_PT)
+    </script>
+<%- include("partials/footer") %>
