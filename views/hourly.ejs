@@ -1,7 +1,12 @@
 <%- include("partials/header") %>
-    <div class="container pt-4 mt-5">
-        <h1>Hourly Data</h1>
-        <canvas id="temp" style="display: block; height: 450px; width: 835px;"></canvas>
+    <div class="col-12 pt-4 mt-5 mx-1">
+        <div class="text-center">
+            <h1>Hourly Data</h1>
+        </div>
+        <div class="col-md-6 text-center">
+            <h3>Temperature &amp; Humidity</h3>
+            <canvas id="temp" ></canvas>
+        </div>
     </div>
     <script src="scripts/hourly_scripts.js"></script>
     <script>
@@ -33,6 +38,6 @@
             CREATED.push((new Date("<%= row.CREATED %>")).toLocaleTimeString("en-US"));
         "<% }); %>"
 
-        chartTemp(CREATED, AMBIENT_TEMPERATURE, GROUND_TEMPERATURE, DEW_PT)
+        chartTemp(CREATED, AMBIENT_TEMPERATURE, GROUND_TEMPERATURE, DEW_PT, HUMIDITY)
     </script>
 <%- include("partials/footer") %>
