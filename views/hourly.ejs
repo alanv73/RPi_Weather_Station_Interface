@@ -1,11 +1,33 @@
 <%- include("partials/header") %>
-    <div class="col-12 pt-4 mt-5 mx-1">
-        <div class="text-center">
-            <h1>Hourly Data</h1>
+    <div id="hourly-title" class="text-center">
+        <h1>Hourly Data</h1>
+    </div>
+    <div class="row mx-1">
+        <div class="col-md-6 text-center">
+            <h4>Air &amp; Ground Temp</h4>
+            <div>
+                <canvas id="temp"></canvas>
+            </div>
         </div>
         <div class="col-md-6 text-center">
-            <h3>Temperature &amp; Humidity</h3>
-            <canvas id="temp" ></canvas>
+            <h4>Rain &amp; Barometric Pressure</h4>
+            <div>
+            <canvas id="rain"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="row mx-1">
+        <div class="col-md-6 text-center">
+            <h4>Dew Point &amp; Humidity</h4>
+            <div>
+            <canvas id="humid"></canvas>
+            </div>
+        </div>
+        <div class="col-md-6 text-center">
+            <h4>Wind Speed &amp; Direction</h4>
+            <div>
+            <canvas id="brain"></canvas>
+            </div>
         </div>
     </div>
     <script src="scripts/hourly_scripts.js"></script>
@@ -38,6 +60,8 @@
             CREATED.push((new Date("<%= row.CREATED %>")).toLocaleTimeString("en-US"));
         "<% }); %>"
 
-        chartTemp(CREATED, AMBIENT_TEMPERATURE, GROUND_TEMPERATURE, DEW_PT, HUMIDITY)
+        chartTemp(CREATED, AMBIENT_TEMPERATURE, GROUND_TEMPERATURE);
+        chartRain(CREATED, RAINFALL, AIR_PRESSURE);
+        chartHumid(CREATED, DEW_PT, HUMIDITY);
     </script>
 <%- include("partials/footer") %>
