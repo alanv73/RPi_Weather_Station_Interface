@@ -4,7 +4,8 @@ const express = require('express'),
     app = express(),
     router = express.Router(),
     sequelize = require('../models/sqlize'),
-    WxMeasurement = require('../models/wxmeasr');
+    WxMeasurement = require('../models/wxmeasr'),
+    WindDir = require('../models/winddir');
 
 router.get('/', (req, res) => {
     WxMeasurement.findAll({
@@ -21,10 +22,24 @@ router.get('/', (req, res) => {
         },
         raw: true
     }).then(rows => {
-        res.render('hourly', {
-            rowData: rows
-        });
         // console.log(rows);
+        const hourlyData = rows;
+
+        WindDir.findOne({
+            attributes: [
+                'N', 'NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE', 'S',
+                'SSW', 'SW', 'WSW', 'W', 'WNW', 'NW', 'NNW'
+            ],
+            raw: true
+        }).then(wind => {
+            res.render('hourly', {
+                rowData: hourlyData,
+                windDir: wind
+            });
+        }).catch(err => {
+            console.error('Error :\n', err.message);
+        });
+
     }).catch(err => {
         console.error('Error :\n', err.message);
     });

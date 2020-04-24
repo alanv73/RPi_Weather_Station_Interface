@@ -4,7 +4,7 @@
     </div>
     <div class="row mx-1">
         <div class="col-md-6 text-center">
-            <h4>Air &amp; Ground Temp</h4>
+            <h4>Temperature &amp; Dew Point</h4>
             <div>
                 <canvas id="temp"></canvas>
             </div>
@@ -18,15 +18,15 @@
     </div>
     <div class="row mx-1">
         <div class="col-md-6 text-center">
-            <h4>Dew Point &amp; Humidity</h4>
+            <h4>Humidity &amp; Wind Speed</h4>
             <div>
             <canvas id="humid"></canvas>
             </div>
         </div>
         <div class="col-md-6 text-center">
-            <h4>Wind Speed &amp; Direction</h4>
+            <h4>Wind Direction</h4>
             <div>
-            <canvas id="brain"></canvas>
+            <canvas id="wind"></canvas>
             </div>
         </div>
     </div>
@@ -60,8 +60,21 @@
             CREATED.push((new Date("<%= row.CREATED %>")).toLocaleTimeString("en-US"));
         "<% }); %>"
 
-        chartTemp(CREATED, AMBIENT_TEMPERATURE, GROUND_TEMPERATURE);
+        chartTemp(CREATED, AMBIENT_TEMPERATURE, GROUND_TEMPERATURE, DEW_PT);
         chartRain(CREATED, RAINFALL, AIR_PRESSURE);
-        chartHumid(CREATED, DEW_PT, HUMIDITY);
+        chartHumid(CREATED, HUMIDITY, WIND_SPEED);
+
+        let windLabels = [];
+        "<% Object.keys(windDir).forEach(label => {%>"
+            windLabels.push("<%= label %>");
+        "<% }); %>"
+
+        let windValues = [];
+        "<% Object.values(windDir).forEach(value => {%>"
+            windValues.push(parseInt("<%= value %>"));
+        "<% }); %>"
+
+        chartWind(windLabels, windValues);
+
     </script>
 <%- include("partials/footer") %>
