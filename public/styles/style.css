@@ -31,6 +31,10 @@ body {
     margin-top: 10%;
 }
 
+#modal-text {
+    white-space: pre;
+}
+
 @media only screen and (max-width: 750px) {
     .jumbotron {
         margin-top: 13%;

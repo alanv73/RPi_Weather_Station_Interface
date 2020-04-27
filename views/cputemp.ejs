@@ -30,10 +30,32 @@
             </form>
         </div>
     </div>
+    <!-- Modal -->
+    <div class="modal fade" id="chartModal" tabindex="-1" role="dialog" aria-labelledby="chartModal"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="chartModalLabel">Data Point</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p id="modal-text" class="mx-5 px-5"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+                </div>
+            </div>
+        </div>
+    </div>
     <script src="scripts/cpu_script.js"></script>
     <script>
 
-        let AMBIENT_TEMPERATURE = [],
+        let ID = [],
+                AMBIENT_TEMPERATURE = [],
                 GROUND_TEMPERATURE = [],
                 HUMIDITY = [],
                 HEAT_IDX = [],
@@ -42,6 +64,7 @@
                 CREATED = [];
 
         "<% data.forEach(row => { %>"
+            ID.push(parseInt("<%= row.ID %>"));
             AMBIENT_TEMPERATURE.push(parseFloat("<%= row.AMBIENT_TEMPERATURE %>"));
             GROUND_TEMPERATURE.push(parseFloat("<%= row.GROUND_TEMPERATURE %>"));
             HUMIDITY.push(parseFloat("<%= row.HUMIDITY %>"));
@@ -51,14 +74,11 @@
             CREATED.push((new Date("<%= row.CREATED %>")).toLocaleString("en-US"));
         "<% }); %>"
 
-        chartCPU(CREATED, CPU_TEMP, AMBIENT_TEMPERATURE, HUMIDITY);
+        chartCPU(CREATED, CPU_TEMP, AMBIENT_TEMPERATURE, HUMIDITY, ID);
 
         // thermometer nav icon
         const icon = '<i class="fas fa-thermometer-half"></i>';
         document.getElementById('icon').innerHTML = icon;
-
-        console.log(moment(new Date("<%= start %>")));
-        console.log(new Date("<%= end %>"));
 
         $('input[name="datetimes"]').daterangepicker({
             timePicker: true,

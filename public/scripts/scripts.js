@@ -13,6 +13,10 @@ legendOptions = {
     labels: {
         boxWidth: 10,
         fontSize: 8,
+        filter: function (item, chart) {
+            // Logic to remove a particular legend item goes here
+            return !item.text.includes('ID');
+        }
     }
 }
 

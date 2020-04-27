@@ -2,6 +2,10 @@ const { Sequelize, Model, DataTypes } = require('sequelize');
 const sequelize = require('./sqlize');
 
 const WxMeasurement = sequelize.define('WEATHER_MEASUREMENT', {
+    ID: {
+        type: DataTypes.BIGINT(20),
+        allowNull: false
+    },
     AMBIENT_TEMPERATURE: {
         type: DataTypes.DECIMAL(6, 2),
         allowNull: false

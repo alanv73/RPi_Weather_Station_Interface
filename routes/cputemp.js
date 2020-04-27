@@ -11,12 +11,9 @@ function renderCPUTemp(
     start = new Date(new Date() - 7 * 24 * 60 * 60 * 1000),
     end = new Date()) {
 
-    console.log(start);
-    console.log(end);
-
     WxMeasurement.findAll({
         attributes: [
-            'AMBIENT_TEMPERATURE', 'GROUND_TEMPERATURE',
+            'ID', 'AMBIENT_TEMPERATURE', 'GROUND_TEMPERATURE',
             'HUMIDITY', 'HEAT_IDX', 'DEW_PT',
             'CPU_TEMP', 'CREATED'
         ],
@@ -41,29 +38,6 @@ function renderCPUTemp(
 }
 
 router.get('/', (req, res) => {
-    // WxMeasurement.findAll({
-    //     attributes: [
-    //         'AMBIENT_TEMPERATURE', 'GROUND_TEMPERATURE',
-    //         'HUMIDITY', 'HEAT_IDX', 'DEW_PT',
-    //         'CPU_TEMP', 'CREATED'
-    //     ],
-    //     where: {
-    //         CREATED: {
-    //             [Op.gte]: new Date(new Date() - (7 * (24 * (60 * 60 * 1000))))
-    //         }
-    //     },
-    //     raw: true
-    // }).then(rows => {
-    //     // console.log(rows);
-
-    //     res.render('cputemp', {
-    //         data: rows
-    //     });
-
-    // }).catch(err => {
-    //     console.error('Error :\n', err.message);
-    // });
-
     renderCPUTemp(res);
 });
 
