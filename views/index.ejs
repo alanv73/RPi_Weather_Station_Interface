@@ -3,14 +3,7 @@
         <header class="jumbotron rounded-lg">
             <div class="container text-center">
                 <h1 class="display-4">
-                    <% let atmPress = parseFloat(data.AIR_PRESSURE);
-                    if (atmPress < 982) { %>
-                        <i class="fas fa-cloud"></i>
-                    <% } else if (atmPress < 1015) { %>
-                        <i class="fas fa-cloud-sun"></i>
-                    <% } else { %>
-                        <i class="fas fa-sun"></i>
-                    <% } %>
+                    <span id="jumbo-icon"><i class="fas fa-sun"></i></span>
                      Currently in 17009...
                 </h1>
                 <p>Current conditions in our part of the world!</p>
@@ -252,12 +245,15 @@
     </div>
 <script src="scripts/index_scripts.js"></script>
 <script>
-// window.addEventListener('load', () => {
-//     document.gauges[0].value = 120;
-//     // document.gauges[0].draw();
-// });
-    
 
+    // choose a nav icon based on barometer and rain
+    const rain = parseFloat("<%= Math.max.apply(Math, rainData.map(rain => { return rain.rainTotal })); %>");
+    const atmPress = parseFloat("<%= data.AIR_PRESSURE %>");
+    
+    const icon = setNavIcon(atmPress, rain);
+    document.getElementById('icon').innerHTML = icon;
+    document.getElementById('jumbo-icon').innerHTML = icon;
+    
     // x and y data for hourly rain chart
     const xs = [];
     const ys = [];

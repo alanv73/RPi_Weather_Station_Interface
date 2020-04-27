@@ -33,7 +33,7 @@ router.get('/', (req, res) => {
             raw: true
         }).then(wind => {
             res.render('hourly', {
-                rowData: hourlyData,
+                data: hourlyData,
                 windDir: wind
             });
         }).catch(err => {

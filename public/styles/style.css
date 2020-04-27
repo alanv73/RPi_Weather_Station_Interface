@@ -2,6 +2,14 @@ body {
     font-family: 'Manrope', sans-serif;
 }
 
+#icon {
+    font-size: 1.65em;
+}
+
+.input-group-text {
+    font-size: 1.55em;
+}
+
 #dashboard {
     padding-top: 6%;
     margin-top: 6%;
@@ -24,16 +32,19 @@ body {
 }
 
 @media only screen and (max-width: 750px) {
-.jumbotron {
-    margin-top: 13%;
+    .jumbotron {
+        margin-top: 13%;
+    }
 }
 
 @media only screen and (max-width: 500px) {
-.jumbotron {
-    margin-top: 20%;
+    .jumbotron {
+        margin-top: 20%;
+    }
 }
 
 @media only screen and (max-width: 300px) {
-.jumbotron {
-    margin-top: 25%;
+    .jumbotron {
+        margin-top: 25%;
+    }
 }

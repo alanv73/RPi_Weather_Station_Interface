@@ -85,3 +85,7 @@ document.fonts.forEach(font => {
         }
     });
 });
+
+setTimeout(function () {
+    location.reload();
+}, 5 * 60 * 1000); // reload page after 5 minutes

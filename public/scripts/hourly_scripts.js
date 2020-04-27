@@ -332,11 +332,11 @@ function chartWind() {
                 label: 'Wind Direction',
                 // yAxisID: 'mph',
                 data: arguments[1],
-                fill: false,
+                fill: true,
                 // pointRadius: 2,
-                backgroundColor: 'rgba(64, 96, 128, 1)',
+                backgroundColor: 'rgba(64, 96, 128, 0.5)',
                 borderColor: 'rgba(64, 96, 128, 1)',
-                // borderWidth: 4,
+                borderWidth: 2,
                 lineTension: 0 // straight lines or curved
             }]
         },
@@ -345,3 +345,7 @@ function chartWind() {
         }
     });
 }
+
+setTimeout(function () {
+    location.reload();
+}, 5 * 60 * 1000); // reload page after 5 minutes

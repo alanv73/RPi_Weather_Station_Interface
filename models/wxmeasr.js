@@ -46,6 +46,10 @@ const WxMeasurement = sequelize.define('WEATHER_MEASUREMENT', {
         type: DataTypes.DECIMAL(6, 2),
         allowNull: false
     },
+    CPU_TEMP: {
+        type: DataTypes.DECIMAL(6, 2),
+        allowNull: false
+    },
     CREATED: {
         type: 'TIMESTAMP',
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),

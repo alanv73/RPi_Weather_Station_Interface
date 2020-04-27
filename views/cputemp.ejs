@@ -1,0 +1,83 @@
+<%- include("partials/header") %>
+    <div class="row">
+        <div id="cpu-title" class="text-center">
+            <h1>CPU Temp Data</h1>
+        </div>
+    </div>
+    <div class="row mx-1">
+        <div class="col-md-12 text-center">
+            <h4>CPU Temp</h4>
+            <div>
+                <canvas id="temp"></canvas>
+            </div>
+        </div>
+    </div>
+    <div id="form-row" class="row mx-5">
+        <div class="col-6 mx-auto">
+            <form name="drange" action="/cputemp" method="post">
+                <div class="col-10 mx-auto">
+                    <div class='input-group date' id='datetimepicker1'>
+                        <input type='text' class="form-control" name="datetimes" size="30" />
+                        <input type='text' name="start" hidden/>
+                        <input type='text' name="end" hidden/>
+                        <div id="drbutton" class="input-group-prepend">
+                            <div class="input-group-text">
+                                <i class="far fa-calendar-alt"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script src="scripts/cpu_script.js"></script>
+    <script>
+
+        let AMBIENT_TEMPERATURE = [],
+                GROUND_TEMPERATURE = [],
+                HUMIDITY = [],
+                HEAT_IDX = [],
+                DEW_PT = [],
+                CPU_TEMP = [],
+                CREATED = [];
+
+        "<% data.forEach(row => { %>"
+            AMBIENT_TEMPERATURE.push(parseFloat("<%= row.AMBIENT_TEMPERATURE %>"));
+            GROUND_TEMPERATURE.push(parseFloat("<%= row.GROUND_TEMPERATURE %>"));
+            HUMIDITY.push(parseFloat("<%= row.HUMIDITY %>"));
+            HEAT_IDX.push(parseFloat("<%= row.HEAT_IDX %>"));
+            DEW_PT.push(parseFloat("<%= row.DEW_PT %>"));
+            CPU_TEMP.push(parseFloat("<%= row.CPU_TEMP %>"));
+            CREATED.push((new Date("<%= row.CREATED %>")).toLocaleString("en-US"));
+        "<% }); %>"
+
+        chartCPU(CREATED, CPU_TEMP, AMBIENT_TEMPERATURE, HUMIDITY);
+
+        // thermometer nav icon
+        const icon = '<i class="fas fa-thermometer-half"></i>';
+        document.getElementById('icon').innerHTML = icon;
+
+        console.log(moment(new Date("<%= start %>")));
+        console.log(new Date("<%= end %>"));
+
+        $('input[name="datetimes"]').daterangepicker({
+            timePicker: true,
+            container: '#form-row',
+            orientation: 'bottom auto',
+            drops: 'up',
+            startDate: moment(new Date("<%= start %>")),
+            endDate: moment(new Date("<%= end %>")),
+            locale: {
+                format: 'M/DD hh:mm A'
+            }
+        }, function (start, end) {
+            $('input[name="start"]').val(start);
+            $('input[name="end"]').val(end);
+            $('form[name="drange"]').submit();
+        });
+
+        $('#drbutton').click(() => { 
+            $('input[name="datetimes"]').focus();
+         });
+</script>
+<%- include("partials/footer") %>

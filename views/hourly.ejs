@@ -45,7 +45,7 @@
                 RAINFALL = [],
                 CREATED = [];
 
-        "<% rowData.forEach(row => { %>"
+        "<% data.forEach(row => { %>"
             AMBIENT_TEMPERATURE.push(parseFloat("<%= row.AMBIENT_TEMPERATURE %>"));
             GROUND_TEMPERATURE.push(parseFloat("<%= row.GROUND_TEMPERATURE %>"));
             AIR_PRESSURE.push(parseFloat("<%= row.AIR_PRESSURE %>"));
@@ -76,5 +76,12 @@
 
         chartWind(windLabels, windValues);
 
-    </script>
+        // choose a nav icon based on barometer and rain
+        const rain = parseFloat("<%= Math.max.apply(Math, data.map(rain => { return rain.RAINFALL })); %>");
+        const atmPress = AIR_PRESSURE.slice(-1)[0];
+
+        const icon = setNavIcon(atmPress, rain)
+        document.getElementById('icon').innerHTML = icon;
+
+</script>
 <%- include("partials/footer") %>
