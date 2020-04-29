@@ -8,7 +8,7 @@ const express = require('express'),
 
 function renderCPUTemp(
     res,
-    start = new Date(new Date() - 7 * 24 * 60 * 60 * 1000),
+    start = new Date(new Date() - 1 * 24 * 60 * 60 * 1000),
     end = new Date()) {
 
     WxMeasurement.findAll({

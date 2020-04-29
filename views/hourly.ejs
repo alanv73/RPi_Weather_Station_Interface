@@ -1,6 +1,7 @@
 <%- include("partials/header") %>
-    <div id="hourly-title" class="text-center">
+    <div id="hourly-title" class="text-center pt-2 mt-5">
         <h1>Hourly Data</h1>
+        <h5><%= page %></h5>
     </div>
     <div class="row mx-1">
         <div class="col-md-6 text-center">
@@ -28,6 +29,23 @@
             <div>
             <canvas id="wind"></canvas>
             </div>
+        </div>
+    </div>
+    <div id="form-row" class="row mx-5 mb-5">
+        <div class="col-6 mx-auto">
+            <form name="drange" action="/hourly" method="post">
+                <div class="col-10 mx-auto">
+                    <div class='input-group date' id='datetimepicker1'>
+                        <input type='text' class="form-control" name="datetimes" size="30" />
+                        <input type='text' name="end" hidden />
+                        <div id="drbutton" class="input-group-prepend">
+                            <div class="input-group-text">
+                                <i class="far fa-calendar-alt"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
     <script src="scripts/hourly_scripts.js"></script>
@@ -83,5 +101,26 @@
         const icon = setNavIcon(atmPress, rain)
         document.getElementById('icon').innerHTML = icon;
 
+        $('input[name="datetimes"]').daterangepicker({
+            timePicker: true,
+            singleDatePicker: true,
+            container: '#form-row',
+            orientation: 'bottom auto',
+            showDropdowns: true,
+            minYear: 2019,
+            maxYear: parseInt(moment().format('YYYY')),
+            startDate: "<%= end %>",
+            drops: 'up',
+            locale: {
+                format: 'M/DD/YY hh:mm:ss A'
+            }
+        }, function (start, end) {
+            $('input[name="end"]').val(start);
+            $('form[name="drange"]').submit();
+        });
+
+        $('#drbutton').click(() => {
+            $('input[name="datetimes"]').focus();
+        });
 </script>
 <%- include("partials/footer") %>
