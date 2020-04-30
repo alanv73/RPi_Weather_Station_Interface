@@ -2,6 +2,29 @@ body {
     font-family: 'Manrope', sans-serif;
 }
 
+.navbar {
+    background-image: url('../images/berries.jpg');
+    color: white;
+    background-size: cover;
+    background-position: center;
+}
+
+
+/*-- header --*/
+/* .description {
+  background-image: url('../images/berries.jpg');
+  background-size: cover;
+  height: 100%;
+} */
+
+/* .btn-danger {
+    background: rgb(255, 0, 157, 0.5);
+} */
+
+.btn-danger:hover {
+    background: rgb(195, 0, 255, 0.5);
+}
+
 #icon {
     font-size: 1.65em;
 }

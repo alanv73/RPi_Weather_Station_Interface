@@ -60,3 +60,10 @@ function setNavIcon(atmPress, rain) {
     return icon;
 }
 
+function roundMinutes(date) {
+
+    date.setHours(date.getHours() + Math.round(date.getMinutes() / 60));
+    date.setMinutes(0, 0, 0); // Resets also seconds and milliseconds
+
+    return date;
+}

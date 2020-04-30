@@ -5,23 +5,24 @@ const express = require('express'),
     router = express.Router(),
     moment = require('moment'),
     sequelize = require('../models/sqlize'),
+    AvgByHour = require('../models/avgbyhour'),
     WxMeasurement = require('../models/wxmeasr'),
     WindDir = require('../models/winddir');
 
-var getHourlyData = function (req, res, startDateTime) {
+var getWeeklyData = function (req, res, startDateTime) {
     let startDate = startDateTime;
-    // console.log(`getHourlyData startDate: ${startDate}`);
+    // console.log(`getWeeklyData startDate: ${startDate}`);
 
     let endDate = new Date(startDateTime);
-    endDate.setHours(endDate.getHours() + 1);
-    // console.log(`getHourlyData endDate: ${endDate}`);
+    endDate.setDate(startDateTime.getDate() + 7);
+    // console.log(`getWeeklyData endDate: ${endDate}`);
 
-    WxMeasurement.findAll({
+    AvgByHour.findAll({
         attributes: [
             'AMBIENT_TEMPERATURE', 'GROUND_TEMPERATURE', 'AIR_PRESSURE',
             'HUMIDITY', 'WIND_DIRECTION', 'WIND_SPEED',
             'WIND_GUST_SPEED', 'WIND_CHILL', 'HEAT_IDX', 'DEW_PT',
-            'RAINFALL', 'CREATED'
+            'RAINFALL', 'CREATED', 'CREATED_DATE', 'CREATED_HOUR'
         ],
         where: {
             CREATED: {
@@ -31,7 +32,7 @@ var getHourlyData = function (req, res, startDateTime) {
         raw: true
     }).then(rows => {
         // console.log(rows);
-        const hourlyData = rows;
+        const weeklyData = rows;
 
         WindDir.findOne({
             attributes: [
@@ -40,11 +41,11 @@ var getHourlyData = function (req, res, startDateTime) {
             ],
             raw: true
         }).then(wind => {
-            res.render('hourly', {
-                data: hourlyData,
+            res.render('weekly', {
+                data: weeklyData,
                 windDir: wind,
-                start: moment(hourlyData[0].CREATED).format('M/D H:mm a'),
-                page: moment(hourlyData[0].CREATED).format("dddd, MMMM Do YYYY, h:mm a")
+                start: moment(weeklyData[0].CREATED).format('MM/DD/YYYY HH:mm:ss'),
+                page: moment(weeklyData[0].CREATED).format("dddd, MMMM Do YYYY, h:mm a")// moment().format("dddd, MMMM Do YYYY, h:mm a")
             });
         }).catch(err => {
             console.error('Error :\n', err.message);
@@ -58,20 +59,17 @@ var getHourlyData = function (req, res, startDateTime) {
 router.get('/', async (req, res) => {
 
     let today = new Date();
-    let lastHour = new Date(today);
-    lastHour.setHours(today.getHours() - 1);
+    let lastWeek = new Date(today)
+    lastWeek.setDate(today.getDate() - 7);
 
-    // console.log(`get date: ${lastHour}`);
-    getHourlyData(req, res, lastHour);
+    getWeeklyData(req, res, lastWeek);
 
 });
 
 router.post('/', async (req, res) => {
-    // console.log(`post date: ${req.body.start}`);
     const startDate = new Date(req.body.start);
-    // console.log(`post dateified date: ${startDate}`);
-
-    getHourlyData(req, res, startDate);
+    // console.log(`post date: ${startDate}`);
+    getWeeklyData(req, res, startDate);
 });
 
 module.exports = router;

@@ -1,6 +1,6 @@
 <%- include("partials/header") %>
     <div id="hourly-title" class="text-center pt-2 mt-5">
-        <h1>Hourly Data</h1>
+        <h1>Weekly Data</h1>
         <h5><%= page %></h5>
     </div>
     <div class="row mx-1">
@@ -31,9 +31,9 @@
             </div>
         </div>
     </div>
-    <div id="form-row" class="row mx-5 mb-5">
+    <div id="form-row align-items-center" class="row mx-5 mb-5">
         <div class="col-6 mx-auto">
-            <form name="drange" action="/hourly" method="post">
+            <form name="drange" action="/weekly" method="post">
                 <div class="col-10 mx-auto">
                     <div class='input-group date' id='datetimepicker1'>
                         <label class="col-form-label mb-0 mx-3" for="datetimes">Start Date</label>
@@ -61,6 +61,7 @@
                 </div>
                 <div class="modal-body">
                     <p id="modal-text" class="mx-5 px-5"></p>
+                    <small>All measurements displayed are average readings for the hour given</small>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -71,6 +72,7 @@
     </div>
     <script src="scripts/four_chart_script.js"></script>
     <script>
+        let dateOptions = { dateStyle: 'short', hour: 'long' };
         let AMBIENT_TEMPERATURE = [],
                 GROUND_TEMPERATURE = [],
                 AIR_PRESSURE = [],
@@ -97,8 +99,8 @@
             HEAT_IDX.push(parseFloat("<%= row.HEAT_IDX %>"));
             DEW_PT.push(parseFloat("<%= row.DEW_PT %>"));
             RAINFALL.push(parseFloat("<%= row.RAINFALL %>"));
+            CREATED.push((moment(new Date("<%= row.CREATED %>")).format('M/D/YY ha')));
             CREATED_DT.push((new Date("<%= row.CREATED %>")));
-            CREATED.push(moment(new Date("<%= row.CREATED %>")).format('h:mma'));
         "<% }); %>"
 
         chartTemp(CREATED, AMBIENT_TEMPERATURE, GROUND_TEMPERATURE, DEW_PT);
@@ -119,7 +121,7 @@
 
         // choose a nav icon based on barometer and rain
         const rain = parseFloat("<%= Math.max.apply(Math, data.map(rain => { return rain.RAINFALL })); %>");
-        const atmPress = AIR_PRESSURE.slice(-1)[0];
+        const atmPress = AIR_PRESSURE[AIR_PRESSURE.length - 1];
 
         const icon = setNavIcon(atmPress, rain)
         document.getElementById('icon').innerHTML = icon;
@@ -135,7 +137,7 @@
             startDate: "<%= start %>",
             drops: 'up',
             locale: {
-                format: 'M/D h:mm A'
+                format: 'M/DD/YY h:mm A'
             }
         }, function (start, end) {
             $('input[name="start"]').val(start);
@@ -147,8 +149,19 @@
         });
 
         $('#drill').click(() => {
-            let timestamp = $('#chartModalLabel').text();
-            alert(new Date(timestamp));
+            let timestamp = new Date($('#chartModalLabel').text());
+            let form = document.createElement("form");
+            let input = document.createElement('input');
+
+            form.method = 'post';
+            form.action = '/hourly';
+            $('body').append(form);
+            input.type = "text";
+            input.name = "start";
+            input.value = timestamp;
+            form.appendChild(input);
+            form.submit();
+
         });
 </script>
 <%- include("partials/footer") %>
