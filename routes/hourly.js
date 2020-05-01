@@ -8,6 +8,16 @@ const express = require('express'),
     WxMeasurement = require('../models/wxmeasr'),
     WindDir = require('../models/winddir');
 
+// returns date object with minutes/seconds removed
+// 6:35 => 6:00
+function floorMinutes(date) {
+
+    date.setHours(date.getHours());
+    date.setMinutes(0, 0, 0); // Resets also seconds and milliseconds
+
+    return date;
+}
+
 var getHourlyData = function (req, res, startDateTime) {
     let startDate = startDateTime;
     // console.log(`getHourlyData startDate: ${startDate}`);
@@ -44,7 +54,7 @@ var getHourlyData = function (req, res, startDateTime) {
                 data: hourlyData,
                 windDir: wind,
                 start: moment(hourlyData[0].CREATED).format('M/D H:mm a'),
-                page: moment(hourlyData[0].CREATED).format("dddd, MMMM Do YYYY, h:mm a")
+                page: moment(hourlyData[0].CREATED)//.format("dddd, MMMM Do YYYY, h:mm a")
             });
         }).catch(err => {
             console.error('Error :\n', err.message);

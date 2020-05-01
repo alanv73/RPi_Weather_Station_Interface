@@ -60,9 +60,20 @@ function setNavIcon(atmPress, rain) {
     return icon;
 }
 
+// returns date object with time rounded to the nearest hour
 function roundMinutes(date) {
 
     date.setHours(date.getHours() + Math.round(date.getMinutes() / 60));
+    date.setMinutes(0, 0, 0); // Resets also seconds and milliseconds
+
+    return date;
+}
+
+// returns date object with minutes/seconds removed
+// 6:35 => 6:00
+function floorMinutes(date) {
+
+    date.setHours(date.getHours());
     date.setMinutes(0, 0, 0); // Resets also seconds and milliseconds
 
     return date;

@@ -44,7 +44,7 @@ function chartTemp() {
         data: {
             labels: cat_data,
             datasets: [{
-                label: 'Ambient Temperature',
+                label: 'Ambient Temp High',
                 yAxisID: 'temp',
                 data: arguments[1],
                 fill: false,
@@ -54,9 +54,19 @@ function chartTemp() {
                 // borderWidth: 4,
                 lineTension: 0.4 // straight lines or curved
             }, {
-                label: 'Ground Temperature',
+                label: 'Ambient Temp Low',
                 yAxisID: 'temp',
                 data: arguments[2],
+                fill: false,
+                pointRadius: 0.5,
+                backgroundColor: 'rgba(255, 128, 0, 1)',
+                borderColor: 'rgba(255, 128, 0, 1)',
+                // borderWidth: 4,
+                lineTension: 0.4 // straight lines or curved
+            }, {
+                label: 'Ground Temperature',
+                yAxisID: 'temp',
+                data: arguments[3],
                 fill: false,
                 pointRadius: 0.5,
                 backgroundColor: 'rgba(0, 255, 0, 1)',
@@ -66,7 +76,7 @@ function chartTemp() {
             }, {
                 label: 'Dew Point',
                 yAxisID: 'dew',
-                data: arguments[3],
+                data: arguments[4],
                 fill: false,
                 pointRadius: 0.5,
                 backgroundColor: 'rgba(0, 0, 255, 1)',
@@ -78,6 +88,7 @@ function chartTemp() {
         options: {
             // aspectRatio: 1,
             responsive: true,
+            events: ["mousemove", "mouseout", "click", "touchstart", "touchmove", "touchend"],
             options: chartOptions,
             scales: {
                 yAxes: [{
@@ -131,8 +142,10 @@ function chartTemp() {
             legend: legendOptions,
             onClick: () => {
                 let timestamp;
+                let titleText;
                 let modalText = '';
-                let units = ['°F', '°F', '°F'];
+                let units = ['°F', '°F', '°F', '°F'];
+                let options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
                 let i = 0;
 
                 const points = tempChart.getElementsAtEvent(event);
@@ -140,7 +153,14 @@ function chartTemp() {
                 if (points) {
                     points.forEach(point => {
                         const dataset = tempChart.data.datasets[point._datasetIndex].label;
-                        timestamp = new Date(CREATED_DT[point._index]);
+                        if (CREATED[point._index]) {
+                            timestamp = new Date(CREATED[point._index]);
+                            titleText = timestamp.toLocaleString('en-US');
+                        } else {
+                            timestamp = new Date(CREATED_DT[point._index]);
+                            titleText = timestamp.toLocaleDateString('en-US', options);
+                        }
+                        // console.log(CREATED[point._index]);
 
                         const value = tempChart.data.datasets[point._datasetIndex].data[point._index];
                         if (dataset != 'ID') {
@@ -150,9 +170,6 @@ function chartTemp() {
                     });
                 }
 
-                let options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-                let titleText = `${timestamp.toLocaleDateString('en-US', options)},
-                                ${roundMinutes(timestamp).toLocaleTimeString('en-US')}`;
                 $('#chartModalLabel').text(titleText);
 
                 $('#modal-text').text(modalText);
@@ -177,7 +194,7 @@ function chartRain() {
         data: {
             labels: x_data,
             datasets: [{
-                label: 'Rain inches',
+                label: 'Rain total',
                 yAxisID: 'rain',
                 data: arguments[1],
                 fill: false,
@@ -187,7 +204,7 @@ function chartRain() {
                 // borderWidth: 4,
                 lineTension: 0.4 // straight lines or curved
             }, {
-                label: 'Barometric Pressure mb',
+                label: 'Barometric Pressure',
                 yAxisID: 'press',
                 data: arguments[2],
                 fill: false,
@@ -272,7 +289,7 @@ function chartHumid() {
         data: {
             labels: x_data,
             datasets: [{
-                label: 'Relative Humidity %',
+                label: 'Relative Humidity',
                 yAxisID: 'RH',
                 data: arguments[1],
                 fill: false,
@@ -282,7 +299,7 @@ function chartHumid() {
                 // borderWidth: 4,
                 lineTension: 0.4 // straight lines or curved
             }, {
-                label: 'Wind Speed mph',
+                label: 'Wind Speed',
                 yAxisID: 'mph',
                 data: arguments[2],
                 fill: false,

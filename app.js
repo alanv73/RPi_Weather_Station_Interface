@@ -5,6 +5,7 @@ const express = require('express'),
     router = express.Router(),
     sequelize = require('./models/sqlize'),
     AvgByHour = require('./models/avgbyhour'),
+    AvgByDay = require('./models/avgbyday'),
     WxMeasurement = require('./models/wxmeasr');
 
 const port = process.env.PORT;
@@ -12,13 +13,16 @@ const port = process.env.PORT;
 // requiring ROUTES
 const indexRoutes = require('./routes/index'),
     hourlyRoutes = require('./routes/hourly'),
+    dailyRoutes = require('./routes/daily'),
     weeklyRoutes = require('./routes/weekly'),
-    cpuTempRoutes = require('./routes/cputemp');
+    cpuTempRoutes = require('./routes/cputemp'),
+    resumeRoutes = require('./routes/resume');
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.set('view engine', 'ejs');
 app.use(express.static(__dirname + '/public'));
+// app.use(express.static(__dirname + '/resume'));
 
 function closeDB() {
     sequelize.close().then(() => {
@@ -32,8 +36,10 @@ function closeDB() {
 // requiring route files from express router
 app.use('/', indexRoutes);
 app.use('/hourly', hourlyRoutes);
+app.use('/daily', dailyRoutes);
 app.use('/weekly', weeklyRoutes);
 app.use('/cputemp', cpuTempRoutes);
+app.use('/resume', resumeRoutes);
 
 /*
  * Listen for connections on port 3000

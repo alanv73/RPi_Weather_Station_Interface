@@ -6,6 +6,7 @@ const express = require('express'),
     moment = require('moment'),
     sequelize = require('../models/sqlize'),
     AvgByHour = require('../models/avgbyhour'),
+    AvgByDay = require('../models/avgbyday'),
     WxMeasurement = require('../models/wxmeasr'),
     WindDir = require('../models/winddir');
 
@@ -17,12 +18,12 @@ var getWeeklyData = function (req, res, startDateTime) {
     endDate.setDate(startDateTime.getDate() + 7);
     // console.log(`getWeeklyData endDate: ${endDate}`);
 
-    AvgByHour.findAll({
+    AvgByDay.findAll({
         attributes: [
-            'AMBIENT_TEMPERATURE', 'GROUND_TEMPERATURE', 'AIR_PRESSURE',
-            'HUMIDITY', 'WIND_DIRECTION', 'WIND_SPEED',
+            'AMBIENT_TEMPERATURE_MAX', 'AMBIENT_TEMPERATURE_MIN', 'GROUND_TEMPERATURE',
+            'AIR_PRESSURE', 'HUMIDITY', 'WIND_DIRECTION', 'WIND_SPEED',
             'WIND_GUST_SPEED', 'WIND_CHILL', 'HEAT_IDX', 'DEW_PT',
-            'RAINFALL', 'CREATED', 'CREATED_DATE', 'CREATED_HOUR'
+            'RAINFALL', 'CREATED', 'CREATED_DATE'
         ],
         where: {
             CREATED: {

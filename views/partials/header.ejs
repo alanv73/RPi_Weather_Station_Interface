@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RaspBerrySky</title>
+    <link rel="shortcut icon" type="image/png" href="images/favicon.png" />
     <!-- <meta http-equiv="refresh" content="300"> -->
     
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
@@ -22,11 +23,11 @@
     
     <link rel="stylesheet" href="styles/style.css">
 
-    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-light fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top shadow">
         <a class="navbar-brand" href="/">RaspBerrySky</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
             aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -41,17 +42,28 @@
                 <li class="nav-item active">
                     <a class="nav-link" href="/#dashboard">Dashboard <span class="sr-only">(current)</span></a>
                 </li>
-                <li class="nav-item dropdown">
+                <li class="nav-item active dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
                         aria-haspopup="true" aria-expanded="false">
-                        Historical Data
+                        History
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="/#dashboard">Currently</a>
-                        <a class="dropdown-item" href="/hourly">Past Hour</a>
-                        <a class="dropdown-item" href="#">Past 24 Hours</a>
-                        <a class="dropdown-item" href="/weekly">Past Week</a>
-                        <a class="dropdown-item" href="#">Past Month</a>
+                        <a class="dropdown-item" href="/hourly">Hourly</a>
+                        <a class="dropdown-item" href="/daily">Daily</a>
+                        <a class="dropdown-item" href="/weekly">Weekly</a>
+                        <a class="dropdown-item" href="#">Monthly</a>
+                    </div>
+                </li>
+                <li class="nav-item active dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button"  
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        About
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="/resume" target="_blank">
+                            Resume
+                        </a>
+                        <a class="dropdown-item" href="#">Hardware</a>
                     </div>
                 </li>
             </ul>

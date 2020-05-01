@@ -3,12 +3,18 @@ body {
 }
 
 .navbar {
-    background-image: url('../images/berries.jpg');
-    color: white;
+    /* background-image: linear-gradient(rgba(255,255,255,0.5), rgba(255,255,255,0.5)), url('../images/berries.jpg'); */
+    background-image: linear-gradient(rgba(255,255,255,0.7), rgba(255,255,255,0.7)), url('../images/raspberries-header-1500x300.jpg');
+    /* opacity: 0.2; */
+    color: black;
     background-size: cover;
     background-position: center;
+    font-weight: medium;
 }
 
+.shadow-pi {
+    box-shadow: 0 .5rem 1rem rgba(244,66,185,.15)!important;
+}
 
 /*-- header --*/
 /* .description {

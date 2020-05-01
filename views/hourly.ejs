@@ -3,28 +3,28 @@
         <h1>Hourly Data</h1>
         <h5><%= page %></h5>
     </div>
-    <div class="row mx-1">
-        <div class="col-md-6 text-center">
+    <div class="row mx-2 mb-5">
+        <div class="col-md-6 text-center shadow">
             <h4>Temperature &amp; Dew Point</h4>
             <div>
                 <canvas id="temp"></canvas>
             </div>
         </div>
-        <div class="col-md-6 text-center">
+        <div class="col-md-6 text-center shadow">
             <h4>Rain &amp; Barometric Pressure</h4>
             <div>
             <canvas id="rain"></canvas>
             </div>
         </div>
     </div>
-    <div class="row mx-1">
-        <div class="col-md-6 text-center">
+    <div class="row mx-2 my-5">
+        <div class="col-md-6 text-center shadow">
             <h4>Humidity &amp; Wind Speed</h4>
             <div>
             <canvas id="humid"></canvas>
             </div>
         </div>
-        <div class="col-md-6 text-center">
+        <div class="col-md-6 text-center shadow">
             <h4>Wind Direction</h4>
             <div>
             <canvas id="wind"></canvas>
@@ -69,8 +69,12 @@
             </div>
         </div>
     </div>
-    <script src="scripts/four_chart_script.js"></script>
+    <script src="scripts/daily_hourly_script.js"></script>
     <script>
+        let subTitle = new Date("<%= page %>");
+        console.log(subTitle);
+        $('#hourly-title h5').text(subTitle.toLocaleString());
+
         let AMBIENT_TEMPERATURE = [],
                 GROUND_TEMPERATURE = [],
                 AIR_PRESSURE = [],
@@ -82,8 +86,8 @@
                 HEAT_IDX = [],
                 DEW_PT = [],
                 RAINFALL = [],
-                CREATED_DT = [],
-                CREATED = [];
+                CREATED = [],
+                CREATED_TM = [];
 
         "<% data.forEach(row => { %>"
             AMBIENT_TEMPERATURE.push(parseFloat("<%= row.AMBIENT_TEMPERATURE %>"));
@@ -97,13 +101,13 @@
             HEAT_IDX.push(parseFloat("<%= row.HEAT_IDX %>"));
             DEW_PT.push(parseFloat("<%= row.DEW_PT %>"));
             RAINFALL.push(parseFloat("<%= row.RAINFALL %>"));
-            CREATED_DT.push((new Date("<%= row.CREATED %>")));
-            CREATED.push(moment(new Date("<%= row.CREATED %>")).format('h:mma'));
+            CREATED.push((new Date("<%= row.CREATED %>")));
+            CREATED_TM.push(moment(new Date("<%= row.CREATED %>")).format('h:mm a'));
         "<% }); %>"
 
-        chartTemp(CREATED, AMBIENT_TEMPERATURE, GROUND_TEMPERATURE, DEW_PT);
-        chartRain(CREATED, RAINFALL, AIR_PRESSURE);
-        chartHumid(CREATED, HUMIDITY, WIND_SPEED);
+        chartTemp(CREATED_TM, AMBIENT_TEMPERATURE, GROUND_TEMPERATURE, DEW_PT);
+        chartRain(CREATED_TM, RAINFALL, AIR_PRESSURE);
+        chartHumid(CREATED_TM, HUMIDITY, WIND_SPEED);
 
         let windLabels = [];
         "<% Object.keys(windDir).forEach(label => {%>"
@@ -119,7 +123,7 @@
 
         // choose a nav icon based on barometer and rain
         const rain = parseFloat("<%= Math.max.apply(Math, data.map(rain => { return rain.RAINFALL })); %>");
-        const atmPress = AIR_PRESSURE.slice(-1)[0];
+        const atmPress = AIR_PRESSURE[AIR_PRESSURE.length - 1];
 
         const icon = setNavIcon(atmPress, rain)
         document.getElementById('icon').innerHTML = icon;
@@ -132,7 +136,7 @@
             showDropdowns: true,
             minYear: 2019,
             maxYear: parseInt(moment().format('YYYY')),
-            startDate: "<%= start %>",
+            startDate: subTitle,
             drops: 'up',
             locale: {
                 format: 'M/D h:mm A'

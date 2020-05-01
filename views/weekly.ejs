@@ -1,37 +1,37 @@
 <%- include("partials/header") %>
-    <div id="hourly-title" class="text-center pt-2 mt-5">
+    <div id="weekly-title" class="text-center pt-2 mt-5">
         <h1>Weekly Data</h1>
         <h5><%= page %></h5>
     </div>
-    <div class="row mx-1">
-        <div class="col-md-6 text-center">
+    <div class="row mx-2 mb-5">
+        <div class="col-md-6 text-center shadow">
             <h4>Temperature &amp; Dew Point</h4>
             <div>
-                <canvas id="temp"></canvas>
+                <canvas id="temp" class=""></canvas>
             </div>
         </div>
-        <div class="col-md-6 text-center">
+        <div class="col-md-6 text-center shadow">
             <h4>Rain &amp; Barometric Pressure</h4>
             <div>
-            <canvas id="rain"></canvas>
+            <canvas id="rain" class=""></canvas>
             </div>
         </div>
     </div>
-    <div class="row mx-1">
-        <div class="col-md-6 text-center">
+    <div class="row mx-2 my-5">
+        <div class="col-md-6 text-center shadow">
             <h4>Humidity &amp; Wind Speed</h4>
             <div>
-            <canvas id="humid"></canvas>
+            <canvas id="humid" class=""></canvas>
             </div>
         </div>
-        <div class="col-md-6 text-center">
+        <div class="col-md-6 text-center shadow">
             <h4>Wind Direction</h4>
             <div>
-            <canvas id="wind"></canvas>
+            <canvas id="wind" class=""></canvas>
             </div>
         </div>
     </div>
-    <div id="form-row align-items-center" class="row mx-5 mb-5">
+    <div id="form-row" class="row mx-5 mb-5">
         <div class="col-6 mx-auto">
             <form name="drange" action="/weekly" method="post">
                 <div class="col-10 mx-auto">
@@ -61,7 +61,8 @@
                 </div>
                 <div class="modal-body">
                     <p id="modal-text" class="mx-5 px-5"></p>
-                    <small>All measurements displayed are average readings for the hour given</small>
+                    <small>All measurements displayed are average readings
+                         for the day unless otherwise specified</small>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -73,7 +74,8 @@
     <script src="scripts/four_chart_script.js"></script>
     <script>
         let dateOptions = { dateStyle: 'short', hour: 'long' };
-        let AMBIENT_TEMPERATURE = [],
+        let AMBIENT_TEMPERATURE_MAX = [],
+                AMBIENT_TEMPERATURE_MIN = [],
                 GROUND_TEMPERATURE = [],
                 AIR_PRESSURE = [],
                 HUMIDITY = [],
@@ -88,7 +90,8 @@
                 CREATED = [];
 
         "<% data.forEach(row => { %>"
-            AMBIENT_TEMPERATURE.push(parseFloat("<%= row.AMBIENT_TEMPERATURE %>"));
+            AMBIENT_TEMPERATURE_MAX.push(parseFloat("<%= row.AMBIENT_TEMPERATURE_MAX %>"));
+            AMBIENT_TEMPERATURE_MIN.push(parseFloat("<%= row.AMBIENT_TEMPERATURE_MIN %>"));
             GROUND_TEMPERATURE.push(parseFloat("<%= row.GROUND_TEMPERATURE %>"));
             AIR_PRESSURE.push(parseFloat("<%= row.AIR_PRESSURE %>"));
             HUMIDITY.push(parseFloat("<%= row.HUMIDITY %>"));
@@ -99,13 +102,13 @@
             HEAT_IDX.push(parseFloat("<%= row.HEAT_IDX %>"));
             DEW_PT.push(parseFloat("<%= row.DEW_PT %>"));
             RAINFALL.push(parseFloat("<%= row.RAINFALL %>"));
-            CREATED.push((moment(new Date("<%= row.CREATED %>")).format('M/D/YY ha')));
-            CREATED_DT.push((new Date("<%= row.CREATED %>")));
+            // CREATED.push(new Date("<%= row.CREATED %>"));
+            CREATED_DT.push(moment(new Date("<%= row.CREATED %>")).format('M/D/YY'));
         "<% }); %>"
 
-        chartTemp(CREATED, AMBIENT_TEMPERATURE, GROUND_TEMPERATURE, DEW_PT);
-        chartRain(CREATED, RAINFALL, AIR_PRESSURE);
-        chartHumid(CREATED, HUMIDITY, WIND_SPEED);
+        chartTemp(CREATED_DT, AMBIENT_TEMPERATURE_MAX, AMBIENT_TEMPERATURE_MIN, GROUND_TEMPERATURE, DEW_PT);
+        chartRain(CREATED_DT, RAINFALL, AIR_PRESSURE);
+        chartHumid(CREATED_DT, HUMIDITY, WIND_SPEED);
 
         let windLabels = [];
         "<% Object.keys(windDir).forEach(label => {%>"
@@ -127,7 +130,7 @@
         document.getElementById('icon').innerHTML = icon;
 
         $('input[name="datetimes"]').daterangepicker({
-            timePicker: true,
+            timePicker: false,
             singleDatePicker: true,
             container: '#form-row',
             orientation: 'bottom auto',
@@ -137,7 +140,7 @@
             startDate: "<%= start %>",
             drops: 'up',
             locale: {
-                format: 'M/DD/YY h:mm A'
+                format: 'M/DD/YYYY'
             }
         }, function (start, end) {
             $('input[name="start"]').val(start);
@@ -154,7 +157,7 @@
             let input = document.createElement('input');
 
             form.method = 'post';
-            form.action = '/hourly';
+            form.action = '/daily';
             $('body').append(form);
             input.type = "text";
             input.name = "start";

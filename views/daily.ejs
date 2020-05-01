@@ -1,0 +1,168 @@
+<%- include("partials/header") %>
+    <div id="daily-title" class="text-center pt-2 mt-5">
+        <h1>Daily Data</h1>
+        <h5><%= page %></h5>
+    </div>
+    <div class="row mx-2 mb-5">
+        <div class="col-md-6 text-center shadow">
+            <h4>Temperature &amp; Dew Point</h4>
+            <div>
+                <canvas id="temp"></canvas>
+            </div>
+        </div>
+        <div class="col-md-6 text-center shadow">
+            <h4>Rain &amp; Barometric Pressure</h4>
+            <div>
+            <canvas id="rain"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="row mx-2 my-5">
+        <div class="col-md-6 text-center shadow">
+            <h4>Humidity &amp; Wind Speed</h4>
+            <div>
+            <canvas id="humid"></canvas>
+            </div>
+        </div>
+        <div class="col-md-6 text-center shadow">
+            <h4>Wind Direction</h4>
+            <div>
+            <canvas id="wind"></canvas>
+            </div>
+        </div>
+    </div>
+    <div id="form-row" class="row mx-5 mb-5">
+        <div class="col-6 mx-auto">
+            <form name="drange" action="/daily" method="post">
+                <div class="col-10 mx-auto">
+                    <div class='input-group date' id='datetimepicker1'>
+                        <label class="col-form-label mb-0 mx-3" for="datetimes">Start Date</label>
+                        <input type='text' class="form-control" name="datetimes" size="30" />
+                        <input type='text' name="start" hidden />
+                        <div id="drbutton" class="input-group-prepend">
+                            <div class="input-group-text">
+                                <i class="far fa-calendar-alt"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!-- Modal -->
+    <div class="modal fade" id="chartModal" tabindex="-1" role="dialog" aria-labelledby="chartModal" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="chartModalLabel">Data Point</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p id="modal-text" class="mx-5 px-5"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button id="drill" type="button" class="btn btn-primary">Drill Down</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="scripts/daily_hourly_script.js"></script>
+    <script>
+        let AMBIENT_TEMPERATURE = [],
+                GROUND_TEMPERATURE = [],
+                AIR_PRESSURE = [],
+                HUMIDITY = [],
+                WIND_DIRECTION = [],
+                WIND_SPEED = [],
+                WIND_GUST_SPEED = [],
+                WIND_CHILL = [],
+                HEAT_IDX = [],
+                DEW_PT = [],
+                RAINFALL = [],
+                CREATED = [],
+                CREATED_TM = [];
+
+        "<% data.forEach(row => { %>"
+            AMBIENT_TEMPERATURE.push(parseFloat("<%= row.AMBIENT_TEMPERATURE %>"));
+            GROUND_TEMPERATURE.push(parseFloat("<%= row.GROUND_TEMPERATURE %>"));
+            AIR_PRESSURE.push(parseFloat("<%= row.AIR_PRESSURE %>"));
+            HUMIDITY.push(parseFloat("<%= row.HUMIDITY %>"));
+            WIND_DIRECTION.push(parseFloat("<%= row.WIND_DIRECTION %>"));
+            WIND_SPEED.push(parseFloat("<%= row.WIND_SPEED %>"));
+            WIND_GUST_SPEED.push(parseFloat("<%= row.WIND_GUST_SPEED %>"));
+            WIND_CHILL.push(parseFloat("<%= row.WIND_CHILL %>"));
+            HEAT_IDX.push(parseFloat("<%= row.HEAT_IDX %>"));
+            DEW_PT.push(parseFloat("<%= row.DEW_PT %>"));
+            RAINFALL.push(parseFloat("<%= row.RAINFALL %>"));
+            CREATED.push((new Date("<%= row.CREATED %>")));
+            CREATED_TM.push(moment(new Date("<%= row.CREATED %>")).format('h:mm a'));
+        "<% }); %>"
+
+        chartTemp(CREATED_TM, AMBIENT_TEMPERATURE, GROUND_TEMPERATURE, DEW_PT);
+        chartRain(CREATED_TM, RAINFALL, AIR_PRESSURE);
+        chartHumid(CREATED_TM, HUMIDITY, WIND_SPEED);
+
+        let windLabels = [];
+        "<% Object.keys(windDir).forEach(label => {%>"
+            windLabels.push("<%= label %>");
+        "<% }); %>"
+
+        let windValues = [];
+        "<% Object.values(windDir).forEach(value => {%>"
+            windValues.push(parseInt("<%= value %>"));
+        "<% }); %>"
+
+        chartWind(windLabels, windValues);
+
+        // choose a nav icon based on barometer and rain
+        const rain = parseFloat("<%= Math.max.apply(Math, data.map(rain => { return rain.RAINFALL })); %>");
+        const atmPress = AIR_PRESSURE[AIR_PRESSURE.length - 1];
+
+        const icon = setNavIcon(atmPress, rain)
+        document.getElementById('icon').innerHTML = icon;
+
+        $('input[name="datetimes"]').daterangepicker({
+            // timePicker: true,
+            singleDatePicker: true,
+            container: '#form-row',
+            orientation: 'bottom auto',
+            showDropdowns: true,
+            minYear: 2019,
+            maxYear: parseInt(moment().format('YYYY')),
+            startDate: "<%= start %>",
+            drops: 'up',
+            locale: {
+                format: 'M/D/YYYY'
+            }
+        }, function (start, end) {
+            $('input[name="start"]').val(start);
+            $('form[name="drange"]').submit();
+        });
+
+        $('#drbutton').click(() => {
+            $('input[name="datetimes"]').focus();
+        });
+
+        $('#drill').click(() => {
+            let timestamp = $('#chartModalLabel').text();
+            // console.log(floorMinutes(new Date(timestamp)));
+
+            timestamp = floorMinutes(new Date(timestamp));
+            // console.log(timestamp);
+            let form = document.createElement("form");
+            let input = document.createElement('input');
+
+            form.method = 'post';
+            form.action = '/hourly';
+            $('body').append(form);
+            input.type = "text";
+            input.name = "start";
+            input.value = timestamp;
+            form.appendChild(input);
+            form.submit();
+        });
+</script>
+<%- include("partials/footer") %>
