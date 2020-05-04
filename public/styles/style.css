@@ -4,7 +4,7 @@ body {
 
 .navbar {
     /* background-image: linear-gradient(rgba(255,255,255,0.5), rgba(255,255,255,0.5)), url('../images/berries.jpg'); */
-    background-image: linear-gradient(rgba(255,255,255,0.7), rgba(255,255,255,0.7)), url('../images/raspberries-header-1500x300.jpg');
+    background-image: linear-gradient(rgba(241, 180, 221, 0.65), rgba(241, 180, 221, 0.65)), url('../images/raspberries-header-1500x300.jpg');
     /* opacity: 0.2; */
     color: black;
     background-size: cover;
@@ -31,8 +31,21 @@ body {
     background: rgb(195, 0, 255, 0.5);
 }
 
-#icon {
+.icon {
     font-size: 1.65em;
+}
+
+.icon-lg {
+    font-size: 2.5em;
+}
+
+a.icon, a.icon-lg {
+    color: rgb(192, 192, 192);
+    text-decoration: none;
+}
+
+a.icon:visited, a.icon-lg:visited {
+    color: rgb(192, 192, 192);
 }
 
 .input-group-text {

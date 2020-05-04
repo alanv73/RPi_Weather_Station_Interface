@@ -36,27 +36,30 @@ function chartTemp() {
     const chartOptions = {
         canvas: ctz,
         datasets: [{
-            title: 'Dew Point',
+            title: 'Temperature',
             points: arguments[0]
         }, {
-            title: 'Ambient Temperature',
+            title: 'Ambient Temp High',
             points: arguments[1]
         }, {
-            title: 'Ground Temperature',
+            title: 'Ambient Temp Low',
             points: arguments[2]
         }, {
-            title: 'Dew Point',
+            title: 'Ground Temperature',
             points: arguments[3]
+        }, {
+            title: 'Dew Point',
+            points: arguments[4]
         }]
     }
 
-    const tempChart = make3sTempChart(chartOptions);
+    const tempChart = make4sTempChart(chartOptions);
 
     ctz.onclick = function (event) {
         let timestamp;
         let titleText;
         let modalText = '';
-        let units = ['°F', '°F', '°F'];
+        let units = ['°F', '°F', '°F', '°F'];
         let options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
         let i = 0;
 
@@ -65,7 +68,7 @@ function chartTemp() {
         if (points.length > 0) {
             points.forEach(point => {
                 const dataset = tempChart.data.datasets[point._datasetIndex].label;
-                if (CREATED) {
+                if (CREATED[point._index]) {
                     timestamp = new Date(CREATED[point._index]);
                     titleText = timestamp.toLocaleString('en-US');
                 } else {
@@ -80,7 +83,6 @@ function chartTemp() {
                     i++;
                 }
             });
-
             $('#chartModalLabel').text(titleText);
             $('#modal-text').text(modalText);
 

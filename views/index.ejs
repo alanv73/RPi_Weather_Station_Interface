@@ -1,21 +1,18 @@
 <%- include("partials/header") %>
-    <!-- <div class="header container-fluid"> -->
-        <!-- <div class="overlay"> -->
-            <div class="container description">
-                <header class="jumbotron rounded-lg">
-                    <div class="container text-center">
-                        <h1 class="display-4">
-                            <span id="jumbo-icon"><i class="fas fa-sun"></i></span>
-                            Currently in 17009...
-                        </h1>
-                        <p>Current conditions in our part of the world!</p>
-                        <a class="btn btn-success btn-lg" href="#dashboard" role="button">Current Weather Conditions</a>
-                    </div>
-                </header>
+    <div class="container description">
+        <header class="jumbotron rounded-lg">
+            <div class="container">
+                <h1 class="display-4 text-center">
+                    <span id="jumbo-icon"><i class="fas fa-sun"></i></span>
+                    Welcome to Raspberry Sky
+                </h1>
+                <p class="text-center">View the weather conditions measured in our corner of the world!</p>
+                <p class="text-center">
+                    <a class="btn btn-success btn-lg" href="#dashboard" role="button">Current Weather Conditions</a>
+                </p>
             </div>
-        <!-- </div> -->
-    <!-- </div> -->
-
+        </header>
+    </div>
     <div id="dashboard" class="row mx-sm-4 pb-4 justify-content-center">
         <div class="col-lg-3 mt-sm-2">
             <div class="card-column float-lg-left">
@@ -229,7 +226,7 @@
                         </div>
                     </div>
                 </div>
-                <% if(data.totalRain) { %>
+                <% if(parseFloat(data.totalRain) > 0) { %>
                 <div class="card border-0 col-lg-4 col-md-12 text-center mt-4 mx-4 mx-sm-0">
                     <div class="card-header bg-transparent py-0">
                         <h4 class="text-center my-0">RainFall</h4>
@@ -272,7 +269,9 @@
     ys.reverse();
 
     // make the rain chart
-    chartRain(xs, ys);
+    if (parseFloat("<%= data.totalRain %>") > 0) { 
+        chartRain(xs, ys);
+    }
 
     // add a compass point (N, NNE, NE...) to the wind direction angle measurement
     document.getElementById('compass').innerText = deg2Compass(Number("<%= data.WIND_DIRECTION %>"))

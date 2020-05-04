@@ -16,6 +16,8 @@
     <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+    <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
 
     <script src="scripts/gauge.min.js"></script>
@@ -67,9 +69,15 @@
                     </div>
                 </li>
             </ul>
-            <span id="icon">
-                <i class="fas fa-cloud-sun-rain"></i>
+            <span class="icon">
+                <i class="fas fa-cloud-sun-rain">&nbsp</i>
             </span>
+            <div>
+                <a href="https://twitter.com/intent/tweet?button_hashtag=raspberrysky&ref_src=twsrc%5Etfw"
+                    class="twitter-share-button" data-size="large"
+                    data-text="The temperature is <%= data.AMBIENT_TEMPERATURE %>&#176;F over at "
+                    data-url="http://raspberrysky.hopto.org" data-show-count="false"></a>
+            </div>
         </div>
     </nav>
     

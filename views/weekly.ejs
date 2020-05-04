@@ -71,7 +71,7 @@
             </div>
         </div>
     </div>
-    <script src="scripts/four_chart_script.js"></script>
+    <script src="scripts/weekly_script.js"></script>
     <script>
         let dateOptions = { dateStyle: 'short', hour: 'long' };
         let AMBIENT_TEMPERATURE_MAX = [],
@@ -102,7 +102,7 @@
             HEAT_IDX.push(parseFloat("<%= row.HEAT_IDX %>"));
             DEW_PT.push(parseFloat("<%= row.DEW_PT %>"));
             RAINFALL.push(parseFloat("<%= row.RAINFALL %>"));
-            // CREATED.push(new Date("<%= row.CREATED %>"));
+            CREATED.push(new Date("<%= row.CREATED %>"));
             CREATED_DT.push(moment(new Date("<%= row.CREATED %>")).format('M/D/YY'));
         "<% }); %>"
 
