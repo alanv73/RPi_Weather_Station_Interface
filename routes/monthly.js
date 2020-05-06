@@ -5,14 +5,19 @@ const express = require('express'),
     router = express.Router(),
     moment = require('moment'),
     sequelize = require('../models/sqlize'),
+    AvgByHour = require('../models/avgbyhour'),
+    AvgByDay = require('../models/avgbyday'),
     WxMeasurement = require('../models/wxmeasr'),
     WindDir = require('../models/winddir');
 
-var getDailyData = function (req, res, startDateTime) {
+var getMonthlyData = function (req, res, startDateTime) {
     let currentTemp;
-    // console.log(`getDailyData startDateTime: ${startDateTime}`);
-    let startDate = new Date(startDateTime);
-    // console.log(`getDailyData startDate: ${moment(startDate).format('YYYYMMDD')}`);
+    let startDate = startDateTime;
+    // console.log(`getWeeklyData startDate: ${startDate}`);
+
+    let endDate = new Date(startDateTime);
+    endDate.setMonth(startDateTime.getMonth() + 1);
+    // console.log(`getWeeklyData endDate: ${endDate}`);
 
     WxMeasurement.findOne({
         attributes: [
@@ -28,18 +33,22 @@ var getDailyData = function (req, res, startDateTime) {
         console.error('Error :\n', err.message);
     });
 
-    WxMeasurement.findAll({
+    AvgByDay.findAll({
         attributes: [
-            'AMBIENT_TEMPERATURE', 'GROUND_TEMPERATURE', 'AIR_PRESSURE',
-            'HUMIDITY', 'WIND_DIRECTION', 'WIND_SPEED',
+            'AMBIENT_TEMPERATURE_MAX', 'AMBIENT_TEMPERATURE_MIN', 'GROUND_TEMPERATURE',
+            'AIR_PRESSURE', 'HUMIDITY', 'WIND_DIRECTION', 'WIND_SPEED',
             'WIND_GUST_SPEED', 'WIND_CHILL', 'HEAT_IDX', 'DEW_PT',
-            'RAINFALL', 'CREATED'
+            'RAINFALL', 'CREATED', 'CREATED_DATE'
         ],
-        where: sequelize.where(sequelize.fn('DATE', sequelize.col('CREATED')), moment(startDate).format('YYYYMMDD')),
+        where: {
+            CREATED: {
+                [Op.between]: [startDate, endDate]
+            }
+        },
         raw: true
     }).then(rows => {
         // console.log(rows);
-        const dailyData = rows;
+        const monthlyData = rows;
 
         WindDir.findOne({
             attributes: [
@@ -48,11 +57,11 @@ var getDailyData = function (req, res, startDateTime) {
             ],
             raw: true
         }).then(wind => {
-            res.render('daily', {
-                data: dailyData,
+            res.render('monthly', {
+                data: monthlyData,
                 windDir: wind,
-                start: moment(dailyData[0].CREATED).format('M/D/YYYY'),
-                page: moment(dailyData[0].CREATED).format("dddd, MMMM Do YYYY"),
+                start: moment(monthlyData[0].CREATED).format('MM/DD/YYYY HH:mm:ss'),
+                page: moment(monthlyData[0].CREATED).format("dddd, MMMM Do YYYY, h:mm a"),// moment().format("dddd, MMMM Do YYYY, h:mm a")
                 temp: currentTemp
             });
         }).catch(err => {
@@ -67,18 +76,17 @@ var getDailyData = function (req, res, startDateTime) {
 router.get('/', async (req, res) => {
 
     let today = new Date();
+    let lastMonth = new Date(today)
+    lastMonth.setMonth(today.getMonth() - 1);
 
-    // console.log(`get date: ${today}`);
-    getDailyData(req, res, today);
+    getMonthlyData(req, res, lastMonth);
 
 });
 
 router.post('/', async (req, res) => {
-    // console.log(`post date: ${req.body.start}`);
     const startDate = new Date(req.body.start);
-    // console.log(`post dateified date: ${startDate}`);
-
-    getDailyData(req, res, startDate);
+    // console.log(`post date: ${startDate}`);
+    getMonthlyData(req, res, startDate);
 });
 
 module.exports = router;

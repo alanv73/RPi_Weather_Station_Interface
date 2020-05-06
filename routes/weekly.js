@@ -11,12 +11,27 @@ const express = require('express'),
     WindDir = require('../models/winddir');
 
 var getWeeklyData = function (req, res, startDateTime) {
+    let currentTemp;
     let startDate = startDateTime;
     // console.log(`getWeeklyData startDate: ${startDate}`);
 
     let endDate = new Date(startDateTime);
     endDate.setDate(startDateTime.getDate() + 7);
     // console.log(`getWeeklyData endDate: ${endDate}`);
+
+    WxMeasurement.findOne({
+        attributes: [
+            'ID', 'CREATED', 'AMBIENT_TEMPERATURE'
+        ],
+        order: [
+            ['ID', 'DESC']
+        ],
+        raw: true
+    }).then(tempRow => {
+        currentTemp = tempRow.AMBIENT_TEMPERATURE;
+    }).catch(err => {
+        console.error('Error :\n', err.message);
+    });
 
     AvgByDay.findAll({
         attributes: [
@@ -46,7 +61,8 @@ var getWeeklyData = function (req, res, startDateTime) {
                 data: weeklyData,
                 windDir: wind,
                 start: moment(weeklyData[0].CREATED).format('MM/DD/YYYY HH:mm:ss'),
-                page: moment(weeklyData[0].CREATED).format("dddd, MMMM Do YYYY, h:mm a")// moment().format("dddd, MMMM Do YYYY, h:mm a")
+                page: moment(weeklyData[0].CREATED).format("dddd, MMMM Do YYYY, h:mm a"),// moment().format("dddd, MMMM Do YYYY, h:mm a")
+                temp: currentTemp
             });
         }).catch(err => {
             console.error('Error :\n', err.message);

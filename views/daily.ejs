@@ -122,7 +122,7 @@
         const atmPress = AIR_PRESSURE[AIR_PRESSURE.length - 1];
 
         const icon = setNavIcon(atmPress, rain)
-        document.getElementById('icon').innerHTML = icon;
+        document.querySelector('.icon').innerHTML = icon;
 
         $('input[name="datetimes"]').daterangepicker({
             // timePicker: true,

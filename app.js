@@ -15,6 +15,7 @@ const indexRoutes = require('./routes/index'),
     hourlyRoutes = require('./routes/hourly'),
     dailyRoutes = require('./routes/daily'),
     weeklyRoutes = require('./routes/weekly'),
+    monthlyRoutes = require('./routes/monthly'),
     cpuTempRoutes = require('./routes/cputemp'),
     resumeRoutes = require('./routes/resume');
 
@@ -38,6 +39,7 @@ app.use('/', indexRoutes);
 app.use('/hourly', hourlyRoutes);
 app.use('/daily', dailyRoutes);
 app.use('/weekly', weeklyRoutes);
+app.use('/monthly', monthlyRoutes);
 app.use('/cputemp', cpuTempRoutes);
 app.use('/resume', resumeRoutes);
 

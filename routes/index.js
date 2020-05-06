@@ -59,7 +59,8 @@ router.get('/', (req, res) => {
 
             res.render('index', {
                 data: currentData,
-                rainData: hourlyRain
+                rainData: hourlyRain,
+                temp: currentData.AMBIENT_TEMPERATURE
             });
         }).catch(err => {
             console.error('Error :\n', err.message);

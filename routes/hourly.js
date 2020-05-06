@@ -19,12 +19,27 @@ function floorMinutes(date) {
 }
 
 var getHourlyData = function (req, res, startDateTime) {
+    let currentTemp;
     let startDate = startDateTime;
     // console.log(`getHourlyData startDate: ${startDate}`);
 
     let endDate = new Date(startDateTime);
     endDate.setHours(endDate.getHours() + 1);
     // console.log(`getHourlyData endDate: ${endDate}`);
+
+    WxMeasurement.findOne({
+        attributes: [
+            'ID', 'CREATED', 'AMBIENT_TEMPERATURE'
+        ],
+        order: [
+            ['ID', 'DESC']
+        ],
+        raw: true
+    }).then(tempRow => {
+        currentTemp = tempRow.AMBIENT_TEMPERATURE;
+    }).catch(err => {
+        console.error('Error :\n', err.message);
+    });
 
     WxMeasurement.findAll({
         attributes: [
@@ -54,7 +69,8 @@ var getHourlyData = function (req, res, startDateTime) {
                 data: hourlyData,
                 windDir: wind,
                 start: moment(hourlyData[0].CREATED).format('M/D H:mm a'),
-                page: moment(hourlyData[0].CREATED)//.format("dddd, MMMM Do YYYY, h:mm a")
+                page: moment(hourlyData[0].CREATED),//.format("dddd, MMMM Do YYYY, h:mm a")
+                temp: currentTemp
             });
         }).catch(err => {
             console.error('Error :\n', err.message);

@@ -53,7 +53,7 @@
                         <a class="dropdown-item" href="/hourly">Hourly</a>
                         <a class="dropdown-item" href="/daily">Daily</a>
                         <a class="dropdown-item" href="/weekly">Weekly</a>
-                        <a class="dropdown-item" href="#">Monthly</a>
+                        <a class="dropdown-item" href="/monthly">Monthly</a>
                     </div>
                 </li>
                 <li class="nav-item active dropdown">
@@ -69,13 +69,13 @@
                     </div>
                 </li>
             </ul>
-            <span class="icon">
-                <i class="fas fa-cloud-sun-rain">&nbsp</i>
+            <span class="icon  mr-2">
+                <i class="fas fa-cloud-sun-rain"></i>
             </span>
             <div>
                 <a href="https://twitter.com/intent/tweet?button_hashtag=raspberrysky&ref_src=twsrc%5Etfw"
                     class="twitter-share-button" data-size="large"
-                    data-text="The temperature is <%= data.AMBIENT_TEMPERATURE %>&#176;F over at "
+                    data-text="The temperature is <%= temp %>&#176;F over at "
                     data-url="http://raspberrysky.hopto.org" data-show-count="false"></a>
             </div>
         </div>

@@ -1,6 +1,6 @@
 <%- include("partials/header") %>
-    <div id="weekly-title" class="text-center pt-2 mt-5">
-        <h1>Weekly Data</h1>
+    <div id="monthly-title" class="text-center pt-2 mt-5">
+        <h1>Monthly Data</h1>
         <h5><%= page %></h5>
     </div>
     <div class="row mx-2 mb-5">
@@ -33,7 +33,7 @@
     </div>
     <div id="form-row" class="row mx-5 mb-5">
         <div class="col-6 mx-auto">
-            <form name="drange" action="/weekly" method="post">
+            <form name="drange" action="/monthly" method="post">
                 <div class="col-10 mx-auto">
                     <div class='input-group date' id='datetimepicker1'>
                         <label class="col-form-label mb-0 mx-3" for="datetimes">Start Date</label>
@@ -86,7 +86,7 @@
                 HEAT_IDX = [],
                 DEW_PT = [],
                 RAINFALL = [],
-                CREATED_DT = [],
+                CREATED_DT = [];
                 CREATED = [];
 
         "<% data.forEach(row => { %>"
@@ -157,7 +157,7 @@
             let input = document.createElement('input');
 
             form.method = 'post';
-            form.action = '/daily';
+            form.action = '/weekly';
             $('body').append(form);
             input.type = "text";
             input.name = "start";

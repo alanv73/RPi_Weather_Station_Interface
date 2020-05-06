@@ -1,18 +1,16 @@
 <%- include("partials/header") %>
-    <div class="row">
-        <div id="cpu-title" class="text-center">
-            <h1>CPU Temp Data</h1>
-        </div>
+    <div class="page-top text-center pt-2">
+        <h1>CPU Temp Data</h1>
     </div>
-    <div class="row mx-1">
-        <div class="col-md-12 text-center">
-            <h4>CPU Temp</h4>
+    <div class="row mb-3 mx-2">
+        <div class="col-11 mx-auto text-center">
+            <h5><%= start.toLocaleString('en-US') %> - <%= end.toLocaleString('en-US') %></h5>
             <div>
                 <canvas id="temp"></canvas>
             </div>
         </div>
     </div>
-    <div id="form-row" class="row mx-0 mx-md-5">
+    <div id="form-row" class="row mb-5">
         <div class="col-12 col-md-7 mx-auto">
             <form name="drange" action="/cputemp" method="post">
                 <div class="col-10 mx-auto">
@@ -78,7 +76,7 @@
 
         // thermometer nav icon
         const icon = '<i class="fas fa-thermometer-half"></i>';
-        document.getElementById('icon').innerHTML = icon;
+        document.querySelector('.icon').innerHTML = icon;
 
         $('input[name="datetimes"]').daterangepicker({
             timePicker: true,

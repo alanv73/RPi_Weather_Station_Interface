@@ -65,6 +65,7 @@ function chartTemp() {
         if (points.length > 0) {
             points.forEach(point => {
                 const dataset = tempChart.data.datasets[point._datasetIndex].label;
+
                 if (CREATED) {
                     timestamp = new Date(CREATED[point._index]);
                     titleText = timestamp.toLocaleString('en-US');

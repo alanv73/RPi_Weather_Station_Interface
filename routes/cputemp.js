@@ -11,6 +11,22 @@ function renderCPUTemp(
     start = new Date(new Date() - 1 * 24 * 60 * 60 * 1000),
     end = new Date()) {
 
+    let currentTemp;
+
+    WxMeasurement.findOne({
+        attributes: [
+            'ID', 'CREATED', 'AMBIENT_TEMPERATURE'
+        ],
+        order: [
+            ['ID', 'DESC']
+        ],
+        raw: true
+    }).then(tempRow => {
+        currentTemp = tempRow.AMBIENT_TEMPERATURE;
+    }).catch(err => {
+        console.error('Error :\n', err.message);
+    });
+
     WxMeasurement.findAll({
         attributes: [
             'ID', 'AMBIENT_TEMPERATURE', 'GROUND_TEMPERATURE',
@@ -29,7 +45,8 @@ function renderCPUTemp(
         res.render('cputemp', {
             data: rows,
             start: start,
-            end: end
+            end: end,
+            temp: currentTemp
         });
 
     }).catch(err => {

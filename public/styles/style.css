@@ -16,17 +16,6 @@ body {
     box-shadow: 0 .5rem 1rem rgba(244,66,185,.15)!important;
 }
 
-/*-- header --*/
-/* .description {
-  background-image: url('../images/berries.jpg');
-  background-size: cover;
-  height: 100%;
-} */
-
-/* .btn-danger {
-    background: rgb(255, 0, 157, 0.5);
-} */
-
 .btn-danger:hover {
     background: rgb(195, 0, 255, 0.5);
 }
@@ -65,11 +54,7 @@ a.icon:visited, a.icon-lg:visited {
     margin-bottom: 100px;
 }
 
-/* #hourly-title {
-    margin-top: 6%;
-} */
-
-.jumbotron {
+.page-top {
     margin-top: 10%;
 }
 
@@ -82,7 +67,7 @@ a.icon:visited, a.icon-lg:visited {
 }
 
 @media only screen and (max-width: 750px) {
-    .jumbotron {
+    .page-top {
         margin-top: 13%;
     }
 
@@ -93,7 +78,7 @@ a.icon:visited, a.icon-lg:visited {
 }
 
 @media only screen and (max-width: 500px) {
-    .jumbotron {
+    .page-top {
         margin-top: 20%;
     }
 
@@ -104,7 +89,7 @@ a.icon:visited, a.icon-lg:visited {
 }
 
 @media only screen and (max-width: 300px) {
-    .jumbotron {
+    .page-top {
         margin-top: 25%;
     }
 

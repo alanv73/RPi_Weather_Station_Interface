@@ -421,6 +421,7 @@ function make2sChart(data) {
         options: {
             // aspectRatio: 1,
             responsive: true,
+            events: ["mousemove", "mouseout", "click", "touchstart", "touchmove", "touchend"],
             options: chartOptions,
             scales: {
                 yAxes: [{

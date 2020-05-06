@@ -1,6 +1,6 @@
 <%- include("partials/header") %>
     <div class="container description">
-        <header class="jumbotron rounded-lg">
+        <header class="jumbotron rounded-lg page-top">
             <div class="container">
                 <h1 class="display-4 text-center">
                     <span id="jumbo-icon"><i class="fas fa-sun"></i></span>
@@ -252,7 +252,7 @@
     const atmPress = parseFloat("<%= data.AIR_PRESSURE %>");
     
     const icon = setNavIcon(atmPress, rain);
-    document.getElementById('icon').innerHTML = icon;
+    document.querySelector('.icon').innerHTML = icon;
     document.getElementById('jumbo-icon').innerHTML = icon;
     
     // x and y data for hourly rain chart

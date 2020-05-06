@@ -68,14 +68,9 @@ function chartTemp() {
         if (points.length > 0) {
             points.forEach(point => {
                 const dataset = tempChart.data.datasets[point._datasetIndex].label;
-                if (CREATED[point._index]) {
-                    timestamp = new Date(CREATED[point._index]);
-                    titleText = timestamp.toLocaleString('en-US');
-                } else {
-                    timestamp = new Date(CREATED_DT[point._index]);
-                    titleText = timestamp.toLocaleDateString('en-US', options);
-                }
-                // console.log(CREATED[point._index]);
+
+                timestamp = new Date(CREATED_DT[point._index]);
+                titleText = timestamp.toLocaleDateString('en-US', options);
 
                 const value = tempChart.data.datasets[point._datasetIndex].data[point._index];
                 if (dataset != 'ID') {
