@@ -12,6 +12,7 @@ const port = process.env.PORT;
 
 // requiring ROUTES
 const indexRoutes = require('./routes/index'),
+    dashRoutes = require('./routes/dashboard'),
     hourlyRoutes = require('./routes/hourly'),
     dailyRoutes = require('./routes/daily'),
     weeklyRoutes = require('./routes/weekly'),
@@ -36,6 +37,7 @@ function closeDB() {
 /********* ROUTES **********/
 // requiring route files from express router
 app.use('/', indexRoutes);
+app.use('/dashboard', dashRoutes);
 app.use('/hourly', hourlyRoutes);
 app.use('/daily', dailyRoutes);
 app.use('/weekly', weeklyRoutes);
