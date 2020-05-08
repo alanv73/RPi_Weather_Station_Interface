@@ -1,30 +1,20 @@
+require('dotenv').config();
 const { Sequelize, Model, DataTypes } = require('sequelize');
+const DBUSER = process.env.DBUSER;
+const DBPW = process.env.DBPASSWORD;
+const DBHOST = process.env.DBHOST;
 
 // test server
-// const sequelize = new Sequelize('weather', 'alan', 'qnapn3sov', {
-//     host: 'athenaeum',
-//     port: 3306,
 //     dialect: 'mysql',
 //     dialectOptions: {
 //         timezone: '-04:00'
 //     },
 //     timezone: '-04:00',
-//     define: {
-//         freezeTableName: true
-//     },
-//     logging: false, // console.log,
-//     pool: {
-//         handleDisconnects: true,
-//         max: 13,
-//         min: 1,
-//         idle: 10000,
-//         acquire: 20000 // ms
-//     }
-// });
+
 
 // RPi
-const sequelize = new Sequelize('weather', 'pi', 'mysqln3sov', {
-    host: '192.168.1.150',
+const sequelize = new Sequelize('weather', DBUSER, DBPW, {
+    host: DBHOST,
     port: 3306,
     dialect: 'mariadb',
     dialectOptions: {
