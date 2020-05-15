@@ -11,13 +11,15 @@ const express = require('express'),
     WindDir = require('../models/winddir');
 
 var getMonthlyData = function (req, res, startDateTime) {
-    let currentTemp;
-    let startDate = startDateTime;
-    // console.log(`getWeeklyData startDate: ${startDate}`);
+    let pageData = {};
+    let startDate = moment(startDateTime);
+    // console.log(`getMonthlyData startDate: ${startDate}`);
 
     let endDate = new Date(startDateTime);
     endDate.setMonth(startDateTime.getMonth() + 1);
+    endDate = moment(endDate);
     // console.log(`getWeeklyData endDate: ${endDate}`);
+    // console.log(`getMonthlyData startDate2: ${moment(startDate)}`);
 
     WxMeasurement.findOne({
         attributes: [
@@ -28,49 +30,52 @@ var getMonthlyData = function (req, res, startDateTime) {
         ],
         raw: true
     }).then(tempRow => {
-        currentTemp = tempRow.AMBIENT_TEMPERATURE;
-    }).catch(err => {
-        console.error('Error :\n', err.message);
-    });
+        pageData.temp = tempRow.AMBIENT_TEMPERATURE;
 
-    AvgByDay.findAll({
-        attributes: [
-            'AMBIENT_TEMPERATURE_MAX', 'AMBIENT_TEMPERATURE_MIN', 'GROUND_TEMPERATURE',
-            'AIR_PRESSURE', 'HUMIDITY', 'WIND_DIRECTION', 'WIND_SPEED',
-            'WIND_GUST_SPEED', 'WIND_CHILL', 'HEAT_IDX', 'DEW_PT',
-            'RAINFALL', 'CREATED', 'CREATED_DATE'
-        ],
-        where: {
-            CREATED: {
-                [Op.between]: [startDate, endDate]
-            }
-        },
-        raw: true
-    }).then(rows => {
-        // console.log(rows);
-        const monthlyData = rows;
-
-        WindDir.findOne({
+        AvgByDay.findAll({
             attributes: [
-                'N', 'NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE', 'S',
-                'SSW', 'SW', 'WSW', 'W', 'WNW', 'NW', 'NNW'
+                'AMBIENT_TEMPERATURE_MAX', 'AMBIENT_TEMPERATURE_MIN', 'GROUND_TEMPERATURE',
+                'AIR_PRESSURE', 'HUMIDITY', 'WIND_DIRECTION', 'WIND_SPEED',
+                'WIND_GUST_SPEED', 'WIND_CHILL', 'HEAT_IDX', 'DEW_PT',
+                'RAINFALL', 'CREATED', 'CREATED_DATE'
             ],
+            where: {
+                CREATED: {
+                    [Op.between]: [startDate.format('YYYYMMDD'), endDate.format('YYYYMMDD')]
+                }
+            },
+            // logging: console.log,
             raw: true
-        }).then(wind => {
-            res.render('monthly', {
-                data: monthlyData,
-                windDir: wind,
-                start: moment(monthlyData[0].CREATED).format('MM/DD/YYYY HH:mm:ss'),
-                page: moment(monthlyData[0].CREATED).format("dddd, MMMM Do YYYY, h:mm a"),// moment().format("dddd, MMMM Do YYYY, h:mm a")
-                temp: currentTemp
-            });
-        }).catch(err => {
-            console.error('Error :\n', err.message);
-        });
+        }).then(rows => {
+            pageData.data = rows;
+            // console.log(rows);
 
+            WindDir.findOne({
+                attributes: [
+                    'N', 'NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE', 'S',
+                    'SSW', 'SW', 'WSW', 'W', 'WNW', 'NW', 'NNW'
+                ],
+                raw: true
+            }).then(wind => {
+                pageData.windDir = wind;
+                // console.log(pageData.data);
+
+                pageData.start = moment(startDateTime).format('MM/DD/YYYY HH:mm:ss');
+                pageData.page = moment(startDateTime).format("dddd, MMMM Do YYYY");
+
+                res.render('monthly', pageData);
+            }).catch(err => {
+                console.error('WindDir Error :\n', err.message);
+            });
+
+        }).catch(err => {
+            console.error('AvgByDay Error :\n', err.message);
+        });
     }).catch(err => {
-        console.error('Error :\n', err.message);
+        console.error('WxMeasurement Error :\n', err.message);
     });
+
+
 }
 
 router.get('/', async (req, res) => {
@@ -85,7 +90,8 @@ router.get('/', async (req, res) => {
 
 router.post('/', async (req, res) => {
     const startDate = new Date(req.body.start);
-    // console.log(`post date: ${startDate}`);
+    // console.log(`post date: ${req.body.start}`);
+    // console.log(`passed date: ${startDate}`);
     getMonthlyData(req, res, startDate);
 });
 

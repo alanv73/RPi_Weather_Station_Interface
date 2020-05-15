@@ -45,7 +45,7 @@ function chartTemp() {
             title: 'Ambient Temp Low',
             points: arguments[2]
         }, {
-            title: 'Ground Temperature',
+            title: 'Ground Temp Low',
             points: arguments[3]
         }, {
             title: 'Dew Point',

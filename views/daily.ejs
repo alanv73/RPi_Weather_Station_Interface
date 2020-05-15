@@ -117,13 +117,6 @@
 
         chartWind(windLabels, windValues);
 
-        // choose a nav icon based on barometer and rain
-        const rain = parseFloat("<%= Math.max.apply(Math, data.map(rain => { return rain.RAINFALL })); %>");
-        const atmPress = AIR_PRESSURE[AIR_PRESSURE.length - 1];
-
-        const icon = setNavIcon(atmPress, rain)
-        document.querySelector('.icon').innerHTML = icon;
-
         $('input[name="datetimes"]').daterangepicker({
             // timePicker: true,
             singleDatePicker: true,

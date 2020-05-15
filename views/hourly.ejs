@@ -1,7 +1,7 @@
 <%- include("partials/header") %>
     <div id="hourly-title" class="text-center pt-2 mt-5">
         <h1>Hourly Data</h1>
-        <h5><%= page %></h5>
+        <h5>Beginning <%= page %></h5>
     </div>
     <div class="row mx-2 mb-5">
         <div class="col-md-6 text-center shadow">
@@ -71,10 +71,6 @@
     </div>
     <script src="scripts/daily_hourly_script.js"></script>
     <script>
-        let subTitle = new Date("<%= page %>");
-        console.log(subTitle);
-        $('#hourly-title h5').text(subTitle.toLocaleString());
-
         let AMBIENT_TEMPERATURE = [],
                 GROUND_TEMPERATURE = [],
                 AIR_PRESSURE = [],
@@ -121,25 +117,19 @@
 
         chartWind(windLabels, windValues);
 
-        // choose a nav icon based on barometer and rain
-        const rain = parseFloat("<%= Math.max.apply(Math, data.map(rain => { return rain.RAINFALL })); %>");
-        const atmPress = AIR_PRESSURE[AIR_PRESSURE.length - 1];
-
-        const icon = setNavIcon(atmPress, rain)
-        document.querySelector('.icon').innerHTML = icon;
-
         $('input[name="datetimes"]').daterangepicker({
             timePicker: true,
+            timePickerIncrement: 60,
             singleDatePicker: true,
             container: '#form-row',
             orientation: 'bottom auto',
             showDropdowns: true,
             minYear: 2019,
             maxYear: parseInt(moment().format('YYYY')),
-            startDate: subTitle,
+            startDate: new Date("<%= start %>"),
             drops: 'up',
             locale: {
-                format: 'M/D h:mm A'
+                format: 'M/D/YYYY h:mm A'
             }
         }, function (start, end) {
             $('input[name="start"]').val(start);

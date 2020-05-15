@@ -2,13 +2,13 @@
 function setNavIcon(atmPress, rain) {
     let icon;
 
-    if (atmPress < 982) {
+    if (atmPress < 975) {
         if (rain > 0) {
             icon = '<i class="fas fa-cloud-rain"></i>';
         } else {
             icon = '<i class="fas fa-cloud"></i>';
         }
-    } else if (atmPress < 1015) {
+    } else if (atmPress < 1005) {
         if (rain > 0) {
             icon = '<i class="fas fa-cloud-sun-rain"></i>';
         } else {

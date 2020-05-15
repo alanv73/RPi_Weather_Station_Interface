@@ -20,7 +20,7 @@ body {
     background: rgb(195, 0, 255, 0.5);
 }
 
-.icon {
+.icon i {
     font-size: 1.65em;
 }
 
@@ -39,6 +39,12 @@ a.icon:visited, a.icon-lg:visited {
 
 .input-group-text {
     font-size: 1.55em;
+}
+
+#header-temp {
+    font-family: 'Manrope', sans-serif;
+    font-size: 1.25rem;
+    
 }
 
 #dashboard {
@@ -75,6 +81,14 @@ a.icon:visited, a.icon-lg:visited {
 .carousel-caption {
     background-color: rgba(200,200,200,0.4);
     border-radius: 50px;
+}
+
+/* Google Maps */
+#map {
+    /* height: 340px; */
+    /* width: 400px; */
+    height: 100%;
+    width: 100%;
 }
 
 @media only screen and (max-width: 750px) {

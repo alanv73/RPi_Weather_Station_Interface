@@ -9,7 +9,7 @@ const express = require('express'),
     WindDir = require('../models/winddir');
 
 var getDailyData = function (req, res, startDateTime) {
-    let currentTemp;
+    let pageData = {};
     // console.log(`getDailyData startDateTime: ${startDateTime}`);
     let startDate = new Date(startDateTime);
     // console.log(`getDailyData startDate: ${moment(startDate).format('YYYYMMDD')}`);
@@ -23,45 +23,46 @@ var getDailyData = function (req, res, startDateTime) {
         ],
         raw: true
     }).then(tempRow => {
-        currentTemp = tempRow.AMBIENT_TEMPERATURE;
-    }).catch(err => {
-        console.error('Error :\n', err.message);
-    });
+        pageData.temp = tempRow.AMBIENT_TEMPERATURE;
 
-    WxMeasurement.findAll({
-        attributes: [
-            'AMBIENT_TEMPERATURE', 'GROUND_TEMPERATURE', 'AIR_PRESSURE',
-            'HUMIDITY', 'WIND_DIRECTION', 'WIND_SPEED',
-            'WIND_GUST_SPEED', 'WIND_CHILL', 'HEAT_IDX', 'DEW_PT',
-            'RAINFALL', 'CREATED'
-        ],
-        where: sequelize.where(sequelize.fn('DATE', sequelize.col('CREATED')), moment(startDate).format('YYYYMMDD')),
-        raw: true
-    }).then(rows => {
-        // console.log(rows);
-        const dailyData = rows;
-
-        WindDir.findOne({
+        WxMeasurement.findAll({
             attributes: [
-                'N', 'NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE', 'S',
-                'SSW', 'SW', 'WSW', 'W', 'WNW', 'NW', 'NNW'
+                'AMBIENT_TEMPERATURE', 'GROUND_TEMPERATURE', 'AIR_PRESSURE',
+                'HUMIDITY', 'WIND_DIRECTION', 'WIND_SPEED',
+                'WIND_GUST_SPEED', 'WIND_CHILL', 'HEAT_IDX', 'DEW_PT',
+                'RAINFALL', 'CREATED'
             ],
+            where: sequelize.where(sequelize.fn('DATE', sequelize.col('CREATED')), moment(startDate).format('YYYYMMDD')),
             raw: true
-        }).then(wind => {
-            res.render('daily', {
-                data: dailyData,
-                windDir: wind,
-                start: moment(dailyData[0].CREATED).format('M/D/YYYY'),
-                page: moment(dailyData[0].CREATED).format("dddd, MMMM Do YYYY"),
-                temp: currentTemp
+        }).then(rows => {
+            // console.log(rows);
+            pageData.data = rows;
+
+            WindDir.findOne({
+                attributes: [
+                    'N', 'NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE', 'S',
+                    'SSW', 'SW', 'WSW', 'W', 'WNW', 'NW', 'NNW'
+                ],
+                raw: true
+            }).then(wind => {
+                pageData.windDir = wind;
+
+                pageData.start = moment(startDateTime).format('MM/DD/YYYY HH:mm:ss');
+                pageData.page = moment(startDateTime).format("dddd, MMMM Do YYYY");
+
+                res.render('daily', pageData);
+            }).catch(err => {
+                console.error('Error :\n', err.message);
             });
+
         }).catch(err => {
             console.error('Error :\n', err.message);
         });
-
     }).catch(err => {
         console.error('Error :\n', err.message);
     });
+
+
 }
 
 router.get('/', async (req, res) => {

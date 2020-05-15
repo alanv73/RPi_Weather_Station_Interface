@@ -3,7 +3,7 @@
         <header class="jumbotron rounded-lg page-top">
             <div class="container">
                 <h1 class="display-4 text-center">
-                    <span id="jumbo-icon"><i class="fas fa-sun"></i></span>
+                    <span id="jumbo-icon"><i class="fas fa-meteor"></i></span>
                     Welcome to Raspberry Sky
                 </h1>
                 <p class="text-center">View the weather conditions measured in our corner of the world!</p>
@@ -65,9 +65,9 @@
                                 data-animated-value="true" data-height="285" data-min-value="950" data-units="Pressure mb" data-value-box="true"
                                 data-max-value="1050" data-major-ticks="950,960,970,980,990,1000,1010,1020,1030,1040,1050" data-minor-ticks="5"
                                 data-stroke-ticks="true" data-highlights='[
-                                                            {"from": 950, "to": 982, "color": "rgba(92, 127, 138, .55)"},
-                                                            {"from": 982, "to": 1016, "color": "rgba(200, 135, 50, .55)"},
-                                                            {"from": 1016, "to": 1050, "color": "rgba(135, 206, 235, .55)"}
+                                                            {"from": 950, "to": 975, "color": "rgba(92, 127, 138, .55)"},
+                                                            {"from": 975, "to": 1005, "color": "rgba(200, 135, 50, .55)"},
+                                                            {"from": 1005, "to": 1050, "color": "rgba(135, 206, 235, .55)"}
                                                         ]' data-color-plate="#fff" data-border-shadow-width="5" data-borders="false"
                                 data-needle-type="arrow" data-color-needle="rgba(255,0,0,1)" data-needle-width="2"
                                 data-needle-circle-size="7" data-needle-circle-outer="true" data-needle-circle-inner="false"
@@ -247,12 +247,11 @@
 <script src="scripts/index_scripts.js"></script>
 <script>
 
-    // choose a nav icon based on barometer and rain
+    // choose a jumbotron icon based on barometer and rain
     const rain = parseFloat("<%= Math.max.apply(Math, rainData.map(rain => { return rain.rainTotal })); %>");
     const atmPress = parseFloat("<%= data.AIR_PRESSURE %>");
     
     const icon = setNavIcon(atmPress, rain);
-    document.querySelector('.icon').innerHTML = icon;
     document.getElementById('jumbo-icon').innerHTML = icon;
     
     // x and y data for hourly rain chart

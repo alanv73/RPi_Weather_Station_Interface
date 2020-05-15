@@ -1,7 +1,7 @@
 <%- include("partials/header") %>
     <div id="monthly-title" class="text-center pt-2 mt-5">
         <h1>Monthly Data</h1>
-        <h5><%= page %></h5>
+        <h5>Beginning <%= page %></h5>
     </div>
     <div class="row mx-2 mb-5">
         <div class="col-md-6 text-center shadow">
@@ -122,13 +122,6 @@
 
         chartWind(windLabels, windValues);
 
-        // choose a nav icon based on barometer and rain
-        const rain = parseFloat("<%= Math.max.apply(Math, data.map(rain => { return rain.RAINFALL })); %>");
-        const atmPress = AIR_PRESSURE[AIR_PRESSURE.length - 1];
-
-        const icon = setNavIcon(atmPress, rain)
-        document.querySelector('.icon').innerHTML = icon;
-
         $('input[name="datetimes"]').daterangepicker({
             timePicker: false,
             singleDatePicker: true,
@@ -156,12 +149,22 @@
             let form = document.createElement("form");
             let input = document.createElement('input');
 
+            // create temporary submission form
             form.method = 'post';
             form.action = '/weekly';
             $('body').append(form);
+
+            // add an input element to the form
+            // fill element with the start date 
+            // for the weekly charts & submit form
             input.type = "text";
             input.name = "start";
+
+            // set the date to 3 days earlier to put
+            // the date of interest in the middle of the chart
+            timestamp.setDate(timestamp.getDate() - 3);
             input.value = timestamp;
+
             form.appendChild(input);
             form.submit();
 
