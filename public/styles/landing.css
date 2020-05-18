@@ -1,15 +1,17 @@
 body {
   background-color: #000;
+  font-family: 'Manrope', sans-serif;
 }
 
 #landing-header {
   z-index: 1;
   position: relative;
-  text-align: center;
+  /* text-align: center; */
   padding-top: 40vh;
 }
 
-#landing-header h1 {
+#landing-header h1, 
+#landing-header h3 {
   color: #fff;
 }
 
