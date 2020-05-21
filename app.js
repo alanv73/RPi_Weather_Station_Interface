@@ -12,6 +12,7 @@ const port = process.env.PORT;
 
 // requiring ROUTES
 const indexRoutes = require('./routes/index'),
+    errorRoute = require('./routes/404'),
     dashRoutes = require('./routes/dashboard'),
     hourlyRoutes = require('./routes/hourly'),
     dailyRoutes = require('./routes/daily'),
@@ -44,6 +45,7 @@ app.use('/weekly', weeklyRoutes);
 app.use('/monthly', monthlyRoutes);
 app.use('/cputemp', cpuTempRoutes);
 app.use('/resume', resumeRoutes);
+app.use('*', errorRoute);
 
 /*
  * Listen for connections on port 3000

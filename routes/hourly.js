@@ -18,6 +18,10 @@ function floorMinutes(date) {
     return date;
 }
 
+var handleErrors = function (req, res, pageData) {
+    res.render('404', pageData);
+}
+
 var getHourlyData = function (req, res, startDateTime) {
     let pageData = {};
     let startDate = startDateTime;
@@ -72,13 +76,16 @@ var getHourlyData = function (req, res, startDateTime) {
                 res.render('hourly', pageData);
             }).catch(err => {
                 console.error('Error :\n', err.message);
+                handleErrors(pageData);
             });
 
         }).catch(err => {
             console.error('Error :\n', err.message);
+            handleErrors(pageData);
         });
     }).catch(err => {
         console.error('Error :\n', err.message);
+        handleErrors(pageData);
     });
 
 

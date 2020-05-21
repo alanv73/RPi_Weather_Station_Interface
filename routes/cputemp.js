@@ -11,7 +11,7 @@ function renderCPUTemp(
     start = new Date(new Date() - 1 * 24 * 60 * 60 * 1000),
     end = new Date()) {
 
-    let currentTemp;
+    let pageData = {};
 
     WxMeasurement.findOne({
         attributes: [
@@ -22,36 +22,36 @@ function renderCPUTemp(
         ],
         raw: true
     }).then(tempRow => {
-        currentTemp = tempRow.AMBIENT_TEMPERATURE;
-    }).catch(err => {
-        console.error('Error :\n', err.message);
-    });
+        pageData.temp = tempRow.AMBIENT_TEMPERATURE;
 
-    WxMeasurement.findAll({
-        attributes: [
-            'ID', 'AMBIENT_TEMPERATURE', 'GROUND_TEMPERATURE',
-            'HUMIDITY', 'HEAT_IDX', 'DEW_PT',
-            'CPU_TEMP', 'CREATED'
-        ],
-        where: {
-            CREATED: {
-                [Op.between]: [start, end]
-            }
-        },
-        raw: true
-    }).then(rows => {
-        // console.log(rows);
+        WxMeasurement.findAll({
+            attributes: [
+                'ID', 'AMBIENT_TEMPERATURE', 'GROUND_TEMPERATURE',
+                'HUMIDITY', 'HEAT_IDX', 'DEW_PT',
+                'CPU_TEMP', 'CREATED'
+            ],
+            where: {
+                CREATED: {
+                    [Op.between]: [start, end]
+                }
+            },
+            raw: true
+        }).then(rows => {
+            // console.log(rows);
+            pageData.data = rows;
+            pageData.start = start;
+            pageData.end = end;
 
-        res.render('cputemp', {
-            data: rows,
-            start: start,
-            end: end,
-            temp: currentTemp
+            res.render('cputemp', pageData);
+
+        }).catch(err => {
+            console.error('Error :\n', err.message);
         });
-
     }).catch(err => {
         console.error('Error :\n', err.message);
     });
+
+
 }
 
 router.get('/', (req, res) => {

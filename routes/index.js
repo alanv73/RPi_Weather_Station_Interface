@@ -9,6 +9,10 @@ const express = require('express'),
     sequelize = require('../models/sqlize'),
     WxMeasurement = require('../models/wxmeasr');
 
+var handleErrors = function (req, res, pageData) {
+    res.render('404', pageData);
+}
+
 // Root Route - landing page
 router.get('/', (req, res) => {
     res.render('landing');
@@ -46,6 +50,7 @@ router.get('/about', (req, res) => {
         });
     }).catch(err => {
         console.error('Error :\n', err.message);
+        handleErrors(pageData);
     });
 
 });

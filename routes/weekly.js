@@ -10,6 +10,10 @@ const express = require('express'),
     WxMeasurement = require('../models/wxmeasr'),
     WindDir = require('../models/winddir');
 
+var handleErrors = function (req, res, pageData) {
+    res.render('404', pageData);
+}
+
 var getWeeklyData = function (req, res, startDateTime) {
     let pageData = {};
     let startDate = moment(startDateTime);
@@ -63,13 +67,16 @@ var getWeeklyData = function (req, res, startDateTime) {
                 res.render('weekly', pageData);
             }).catch(err => {
                 console.error('Error :\n', err.message);
+                handleErrors(pageData);
             });
 
         }).catch(err => {
             console.error('Error :\n', err.message);
+            handleErrors(pageData);
         });
     }).catch(err => {
         console.error('Error :\n', err.message);
+        handleErrors(pageData);
     });
 
 

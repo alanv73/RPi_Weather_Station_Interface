@@ -8,6 +8,10 @@ const express = require('express'),
     WxMeasurement = require('../models/wxmeasr'),
     WindDir = require('../models/winddir');
 
+var handleErrors = function (req, res, pageData) {
+    res.render('404', pageData);
+}
+
 var getDailyData = function (req, res, startDateTime) {
     let pageData = {};
     // console.log(`getDailyData startDateTime: ${startDateTime}`);
@@ -53,13 +57,16 @@ var getDailyData = function (req, res, startDateTime) {
                 res.render('daily', pageData);
             }).catch(err => {
                 console.error('Error :\n', err.message);
+                handleErrors(pageData);
             });
 
         }).catch(err => {
             console.error('Error :\n', err.message);
+            handleErrors(pageData);
         });
     }).catch(err => {
         console.error('Error :\n', err.message);
+        handleErrors(pageData);
     });
 
 

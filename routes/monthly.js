@@ -10,6 +10,10 @@ const express = require('express'),
     WxMeasurement = require('../models/wxmeasr'),
     WindDir = require('../models/winddir');
 
+var handleErrors = function (req, res, pageData) {
+    res.render('404', pageData);
+}
+
 var getMonthlyData = function (req, res, startDateTime) {
     let pageData = {};
     let startDate = moment(startDateTime);
@@ -66,13 +70,15 @@ var getMonthlyData = function (req, res, startDateTime) {
                 res.render('monthly', pageData);
             }).catch(err => {
                 console.error('WindDir Error :\n', err.message);
+                handleErrors(pageData);
             });
-
         }).catch(err => {
             console.error('AvgByDay Error :\n', err.message);
+            handleErrors(pageData);
         });
     }).catch(err => {
         console.error('WxMeasurement Error :\n', err.message);
+        handleErrors(pageData);
     });
 
 
@@ -90,7 +96,7 @@ router.get('/', async (req, res) => {
 
 router.post('/', async (req, res) => {
     const startDate = new Date(req.body.start);
-    // console.log(`post date: ${req.body.start}`);
+    // console.log(`Monthly post date: ${req.body.start}`);
     // console.log(`passed date: ${startDate}`);
     getMonthlyData(req, res, startDate);
 });
