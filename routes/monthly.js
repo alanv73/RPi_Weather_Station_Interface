@@ -44,7 +44,7 @@ var getMonthlyData = function (req, res, startDateTime) {
                 'RAINFALL', 'CREATED', 'CREATED_DATE'
             ],
             where: {
-                CREATED: {
+                CREATED_DATE: {
                     [Op.between]: [startDate.format('YYYYMMDD'), endDate.format('YYYYMMDD')]
                 }
             },
