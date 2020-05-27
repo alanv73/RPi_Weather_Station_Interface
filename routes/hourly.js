@@ -31,6 +31,11 @@ var getHourlyData = function (req, res, startDateTime) {
     endDate.setHours(endDate.getHours() + 1);
     // console.log(`getHourlyData endDate: ${endDate}`);
 
+    let spStartDate = moment(startDateTime);
+    let spEndDate = new Date(spStartDate);
+    spEndDate.setHours(spEndDate.getHours() + 1);
+    spEndDate = moment(spEndDate);
+
     WxMeasurement.findOne({
         attributes: [
             'ID', 'CREATED', 'AMBIENT_TEMPERATURE'
@@ -61,14 +66,18 @@ var getHourlyData = function (req, res, startDateTime) {
             // console.log(rows);
             pageData.data = rows;
 
-            WindDir.findOne({
-                attributes: [
-                    'N', 'NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE', 'S',
-                    'SSW', 'SW', 'WSW', 'W', 'WNW', 'NW', 'NNW'
-                ],
-                raw: true
+            sequelize.query('CALL windir_histogram (:hist_start, :hist_end);', {
+                replacements: {
+                    hist_start: spStartDate.format('YYYY/MM/DD H:00'),
+                    hist_end: spEndDate.format('YYYY/MM/DD H:00'),
+                    type: sequelize.QueryTypes.SELECT,
+                    model: WindDir,
+                    mapToModel: true,
+                    raw: true
+                }
             }).then(wind => {
-                pageData.windDir = wind;
+                // console.log(wind[0]);
+                pageData.windDir = wind[0];
 
                 pageData.start = moment(startDateTime).format('M/D/YYYY HH:mm');
                 pageData.page = moment(startDateTime).format("dddd, MMMM Do YYYY, h:mm a");

@@ -54,15 +54,18 @@ var getMonthlyData = function (req, res, startDateTime) {
             pageData.data = rows;
             // console.log(rows);
 
-            WindDir.findOne({
-                attributes: [
-                    'N', 'NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE', 'S',
-                    'SSW', 'SW', 'WSW', 'W', 'WNW', 'NW', 'NNW'
-                ],
-                raw: true
+            sequelize.query('CALL windir_histogram (:hist_start, :hist_end);', {
+                replacements: {
+                    hist_start: startDate.format('YYYYMMDD'),
+                    hist_end: endDate.format('YYYYMMDD'),
+                    type: sequelize.QueryTypes.SELECT,
+                    model: WindDir,
+                    mapToModel: true,
+                    raw: true
+                }
             }).then(wind => {
-                pageData.windDir = wind;
-                // console.log(pageData.data);
+                pageData.windDir = wind[0];
+                // console.log(wind[0]);
 
                 pageData.start = moment(startDateTime).format('MM/DD/YYYY HH:mm:ss');
                 pageData.page = moment(startDateTime).format("dddd, MMMM Do YYYY");
