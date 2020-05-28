@@ -546,7 +546,10 @@ function chartWind() {
             }]
         },
         options: {
-            legend: legendOptions
+            legend: { display: false },
+            tooltips: { enabled: false },
+            hover: { mode: null },
+            scale: { ticks: { display: false } }
         }
     });
 }
