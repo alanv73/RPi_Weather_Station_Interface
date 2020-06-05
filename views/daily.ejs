@@ -123,8 +123,10 @@
             container: '#form-row',
             orientation: 'bottom auto',
             showDropdowns: true,
-            minYear: 2019,
-            maxYear: parseInt(moment().format('YYYY')),
+            // minYear: 2019,
+            // maxYear: parseInt(moment().format('YYYY')),
+            minDate: '01-01-2019',
+            maxDate: '12-31-' + (new Date()).getFullYear(),
             startDate: "<%= start %>",
             drops: 'up',
             locale: {
