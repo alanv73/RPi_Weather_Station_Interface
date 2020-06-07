@@ -85,7 +85,7 @@ a.icon:visited, a.icon-lg:visited {
 
 /* Google Maps */
 #map {
-    /* height: 340px; */
+    min-height: 340px;
     /* width: 400px; */
     height: 100%;
     width: 100%;
